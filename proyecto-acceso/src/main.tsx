@@ -7,6 +7,7 @@ import Singup from './routes/singup.tsx'
 import Login from './routes/login.tsx'
 import Dashboard from './routes/dashboard.tsx'
 import ProtectedRoute from './routes/protectedRoute.tsx'
+import { AuthPorvider } from './auth/authProvider.tsx'
 
 
 const router = createBrowserRouter([
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
-      }
+      },
     ],
   },
 ]);
@@ -33,6 +34,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthPorvider>
+      <RouterProvider router={router} />
+    </AuthPorvider>
   </StrictMode>,
 )
