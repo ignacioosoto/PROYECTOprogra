@@ -1,84 +1,33 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { useAuth } from "../auth/authProvider";
+import DefaultLayout from "../layout/defaultLayout";
+import { Navigate } from "react-router-dom";
 
-export default function Singup() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+export default function Signup() {
+  const [name, setName] = useState("")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const auth = useAuth()
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessage('');
-    setError('');
-
-    try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setMessage(data.message);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Error al registrar el usuario');
-      }
-    } catch (err) {
-      setError('Error al conectar con el servidor');
-    }
-  };
-
+  if (auth.isAuthenticated) {
+    return <Navigate to="/dashboard" />
+  }
   return (
-    <div>
-      <h1>Signup</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Sign Up</button>
+    <DefaultLayout>
+      <form className="form">
+        <h1>Signup</h1>
+        <label>Name</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+
+        <label>Username</label>
+        <input type="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+        <label>Password</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+        <button>Create User</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
-  );
+    </DefaultLayout>
+  )
+
 }

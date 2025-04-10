@@ -1,23 +1,30 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../auth/authProvider";
+import DefaultLayout from "../layout/defaultLayout";
+import { useState } from "react"
 
-const Login: React.FC = () => {
-  const navigate = useNavigate();
+export default function Login() {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const auth = useAuth()
 
-  const handleSignupNavigation = () => {
-    navigate('/signup'); // Navigate to the signup route
-  };
-
+  if (auth.isAuthenticated) {
+    return <Navigate to="/dashboard" />
+  }
   return (
-    <div>
-      <h1>Login Page</h1>
-      <form>
-        {/* Your login form fields */}
-        <button type="submit">Login</button>
-      </form>
-      <button onClick={handleSignupNavigation}>Registro</button>
-    </div>
-  );
-};
+    <DefaultLayout>
+      <form className="form">
+        <h1>Login</h1>
 
-export default Login;
+        <label>Username</label>
+        <input type="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+        <label>Password</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+        <button>Login</button>
+      </form>
+    </DefaultLayout>
+  )
+
+}
