@@ -6,7 +6,18 @@ const mongoose = require("mongoose");
 
 require("dotenv").config();
 
-const port = process.env.Port || 5000;
+const port = process.env.Port || 3500;
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/signup", require("./routes/singnup"));
+app.use("/api/login", require("./routes/login"));
+app.use("/api/user", require("./routes/user"));
+app.use("/api/todos", require("./routes/todos"));
+app.use("/api/refresh-token", require("./routes/refreshToken"));
+app.use("/api/signout", require("./routes/signout"));
+
 
 //ruta para probar que funciona
 app.get("/", (req, res) => {
