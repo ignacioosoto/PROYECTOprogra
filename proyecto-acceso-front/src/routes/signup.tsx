@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useAuth } from "../auth/authProvider";
 import DefaultLayout from "../layout/defaultLayout";
-import { Navigate } from "react-router-dom";
+import { ErrorResponse, Navigate } from "react-router-dom";
 import { API_URL } from "../auth/constants";
+import { AuthResponseError } from "../types/types";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [name, setName] = useState("")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [errorResponse, setErrorResponse] = useState("")
   const auth = useAuth()
+  const goTo = useNavigate()
+
 
   //respoesta del usuario conectado a la api
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -30,8 +35,14 @@ export default function Signup() {
 
       if (response.ok) {
         console.log("User created successfully")
+        setErrorResponse("");
+
+        goTo("/");
       } else {
         console.log("Something went wrong")
+        const json = await response.json() as AuthResponseError;
+        setErrorResponse(json.body.error);
+        return;
       }
     } catch (error) {
       console.log(error)
@@ -46,6 +57,7 @@ export default function Signup() {
     <DefaultLayout>
       <form className="form" onSubmit={handleSubmit}>
         <h1>Signup</h1>
+        {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
         <label>Name</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
 
