@@ -1,9 +1,9 @@
-const { Mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 //ingresar un nuevo usuario conectado con la base de datos
 
-const userSchema = new Mongoose.Schema({
+const userSchema = new mongoose.Schema({
     id: { type: Object },
     username: { type: String, require: true, unique: true },
     password: { type: String, require: true },
@@ -27,3 +27,5 @@ userSchema.pre("save", function (next) {
         next();
     }
 })
+
+module.exports = mongoose.model("User", userSchema);

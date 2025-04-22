@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 async function main() {
-    await mongoose.connect(process.env.DB_CONECTION_URL)
-    console.log("Connected to MongoDB")
+    await mongoose.connect(process.env.DB_CONECTION_URL);
+    console.log("Connected to MongoDB");
 }
 
 main().catch(console.error);

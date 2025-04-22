@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { jsonResponse } = require("../lib/jsonResponse");
-
+const User = require("../esquema/user")
 
 //definimos la ruta de signup
 router.post("/", (req, res) => {
@@ -15,11 +15,16 @@ router.post("/", (req, res) => {
         )
     }
 
+
+    const user = new User({ username, name, password });
+
+    user.save();
+
     //crear usuaruio en la base de datos
     res.status(200).json(jsonResponse(200, { message: "User created successfully" }))
 
 
-    res.send("signout");
+    //res.send("signout");
 });
 
 module.exports = router;
