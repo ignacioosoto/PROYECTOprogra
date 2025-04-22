@@ -18,7 +18,7 @@ async function main() {
 
 main().catch(console.error);
 
-app.use("/api/signup", require("./routes/singnup"));
+app.use("/api/signup", require("./routes/signup"));
 app.use("/api/login", require("./routes/login"));
 app.use("/api/user", require("./routes/user"));
 app.use("/api/todos", require("./routes/todos"));
