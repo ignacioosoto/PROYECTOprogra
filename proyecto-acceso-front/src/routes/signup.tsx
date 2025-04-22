@@ -51,7 +51,7 @@ export default function Signup() {
   }
 
   if (auth.isAuthenticated) {
-    return <Navigate to="/dashboaard" />
+    return <Navigate to="/dashboard" />
   }
   return (
     <DefaultLayout>
