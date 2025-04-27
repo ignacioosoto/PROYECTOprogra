@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { generateAccessToken, generateRefreshToken } = require("../auth/generateTokens");
+const getUserInfo = require("../lib/getUserInfo");
+const Token = require("../esquema/token")
 
 //ingresar un nuevo usuario conectado con la base de datos
 
@@ -37,6 +40,22 @@ userSchema.methods.usernameExist = async function (username) {
 userSchema.methods.comparePassword = async function (password, hash) {
     const same = await bcrypt.compare(password, hash);
     return same;
+}
+
+userSchema.methods.createAccessToken = function () {
+    return generateAccessToken(getUserInfo(this));
+}
+
+userSchema.methods.createRefreshToken = async function () {
+    const refreshToken = generateRefreshToken(getUserInfo(this))
+    try {
+        await new Token({ token: refreshToken }).save();
+
+        return refreshToken;
+    } catch (error) {
+        console.log(error);
+
+    }
 }
 
 module.exports = mongoose.model("User", userSchema);
