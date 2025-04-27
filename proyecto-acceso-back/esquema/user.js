@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const mongoose = require("mongoose");
-=======
-const Mongoose = require("mongoose");
->>>>>>> c9ab5c2242b417b915c6283d9a46ae2af3d8a04f
 const bcrypt = require("bcrypt");
 
 //ingresar un nuevo usuario conectado con la base de datos
@@ -32,8 +28,5 @@ userSchema.pre("save", function (next) {
     }
 })
 
-<<<<<<< HEAD
 module.exports = mongoose.model("User", userSchema);
-=======
-module.exports = Mongoose.model("User", userSchema);
->>>>>>> c9ab5c2242b417b915c6283d9a46ae2af3d8a04f
+
