@@ -28,5 +28,15 @@ userSchema.pre("save", function (next) {
     }
 })
 
-module.exports = mongoose.model("User", userSchema);
+//comprobacion de que el usuario ingresado en signup no tiene vinculado ningun registro anterior
+userSchema.methods.usernameExist = async function (username) {
+    const result = await mongoose.model("User").findOne({ username })
+    return !!result > 0
+}
 
+userSchema.methods.comparePassword = async function (password, hash) {
+    const same = await bcrypt.compare(password, hash);
+    return same;
+}
+
+module.exports = mongoose.model("User", userSchema);

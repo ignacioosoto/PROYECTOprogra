@@ -3,7 +3,7 @@ const { jsonResponse } = require("../lib/jsonResponse");
 const User = require("../esquema/user")
 
 //definimos la ruta de signup
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
     const { username, name, password } = req.body;
 
     //por si se manda la solicitud de singout sin ningun campo
@@ -15,15 +15,36 @@ router.post("/", (req, res) => {
         )
     }
 
-    const user = new User({ username, name, password });
+    try {
 
-    user.save()
+        const user = new User();
+        const exists = await user.usernameExist(username);
 
-    //crear usuaruio en la base de datos
-    res.status(200).json(jsonResponse(200, { message: "User created successfully" }))
+        if (exists) {
+            return res.status(400).json(
+                jsonResponse(400, {
+                    error: "Username already exists",
+                })
+            );
+        }
+
+        const newUser = new User({ username, name, password });
 
 
-    //res.send("signout");
+        newUser.save()
+
+        //crear usuaruio en la base de datos
+        res.status(200).json(jsonResponse(200, { message: "User created successfully" }))
+
+
+    } catch (error) {
+        res.status(500).json(
+            jsonResponse(500, {
+                error: "Error creating user"
+            })
+        )
+
+    }
 });
 
 module.exports = router;
