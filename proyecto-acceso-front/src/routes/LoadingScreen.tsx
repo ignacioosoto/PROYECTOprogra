@@ -1,9 +1,14 @@
-import '../styles/LoadingScreen.css';
-export default function LoadingScreen() {
+import '../styles/LoadingScreen.css'; // Importa el CSS desde la carpeta styles
+
+function LoadingScreen() {
   return (
     <div className="loading-screen">
-      <div className="loading-spinner"></div>
-      <p>Loading...</p>
+      <p>Cargando...</p>
+      <p>🚀</p>
+      <div className="spinner"></div>
+      <small>Recolectando informacion</small>
     </div>
   );
 }
+
+export default LoadingScreen;
