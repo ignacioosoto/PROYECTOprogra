@@ -1,11 +1,9 @@
-import { Children } from "react"
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 interface DefaultLayoutProps {
     children: React.ReactNode;
 }
 
-//pagina que tenga el menu de nagevacion
 export default function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <>
@@ -13,16 +11,15 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
                 <nav>
                     <ul>
                         <li>
-                            <Link to="/">Home</Link>
+                            <Link to="/">Login</Link>
                         </li>
                         <li>
-                            <Link to="/signup">Singup</Link>
+                            <Link to="/signup">Signup</Link>
                         </li>
                     </ul>
                 </nav>
-
             </header>
             <main>{children}</main>
         </>
-    )
+    );
 }
