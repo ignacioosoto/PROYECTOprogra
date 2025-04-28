@@ -1,9 +1,9 @@
-
+import '../styles/LoadingScreen.css';
 export default function LoadingScreen() {
   return (
     <div className="loading-screen">
       <div className="loading-spinner"></div>
-      <h1>Loading...</h1>
+      <p>Loading...</p>
     </div>
   );
 }
