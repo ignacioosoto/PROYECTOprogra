@@ -7,6 +7,8 @@ import Login from './routes/login.tsx'
 import Dashboard from './routes/dashboard.tsx'
 import ProtectedRoute from './routes/protectedRoute.tsx'
 import { AuthPorvider } from './auth/authProvider.tsx'
+import FaceRecognition from './routes/FaceRecognition.tsx'
+import DynamicQR from './routes/DynamicQR.tsx'
 
 
 const router = createBrowserRouter([
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/face-recognition",
+    element: <FaceRecognition />,
+  },
+  {
+    path: "/dynamic-qr",
+    element: <DynamicQR />,
   },
   {
     path: "/",
