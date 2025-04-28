@@ -31,19 +31,39 @@ export default function FaceRecognition() {
 
   return (
     <DefaultLayout>
-      <div className="page" style={{ textAlign: "center" }}>
+      <div className="page">
         <h1>Reconocimiento Facial</h1>
-        <video ref={videoRef} width="400" height="300" style={{ borderRadius: "1rem", marginBottom: "1rem" }} />
-        <div className="flex gap-4 justify-center">
+
+        {/* Contenedor de la cámara */}
+        <div className="camera-container">
+          <video
+            ref={videoRef}
+            className="camera-view"
+            autoPlay
+            muted
+            playsInline
+          />
+        </div>
+
+        {/* Botones de cámara */}
+        <div className="flex gap-4 justify-center mt-4 flex-wrap">
           <button className="primary-button" onClick={startCamera}>Conectar Cámara</button>
           <button className="primary-button" onClick={takePhoto}>Capturar Foto</button>
         </div>
+
         <canvas ref={canvasRef} width="400" height="300" style={{ display: "none" }} />
+
+        {/* Imagen capturada */}
         {photo && (
-          <div style={{ marginTop: "1rem" }}>
+          <div className="flex flex-col items-center mt-4">
             <h2>Foto capturada:</h2>
-            <img src={photo} alt="captured" style={{ borderRadius: "1rem", marginTop: "0.5rem" }} />
-            <a href={photo} download="foto-reconocimiento.png" className="primary-button" style={{ marginTop: "1rem", display: "inline-block" }}>
+            <img src={photo} alt="captured" className="captured-photo" />
+            <a
+              href={photo}
+              download="foto-reconocimiento.png"
+              className="primary-button"
+              style={{ marginTop: "1rem", display: "inline-block" }}
+            >
               Descargar Imagen
             </a>
           </div>

@@ -197,3 +197,96 @@ h1 {
     font-size: 0.8rem;
   }
 }
+/* Barra superior que contiene hora, fecha y día */
+.info-bar {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  border: 1px solid #444;
+}
+
+/* Botones principales */
+.button-home {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  font-weight: bold;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 1.2rem;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.button-home:hover {
+  background-color: #4c5694;
+  transform: scale(1.05);
+}
+
+/* Botones de la página Reconocimiento Facial */
+.primary-button {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  font-weight: bold;
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.primary-button:hover {
+  background-color: #4c5694;
+  transform: scale(1.05);
+}
+
+/* Cámara contenedor */
+.camera-container {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: #1f2235;
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.camera-view {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  background-color: black;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Imagen capturada */
+.captured-photo {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  margin-top: 1rem; /* Asegura que no esté pegada al h2 */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Responsive especial para celulares */
+@media (max-width: 640px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .camera-container {
+    padding: 0.5rem;
+  }
+
+  .camera-view {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .captured-photo {
+    max-width: 100%;
+  }
+}
