@@ -4,7 +4,8 @@ import DefaultLayout from "../layout/defaultLayout";
 import { Navigate, useNavigate } from "react-router-dom";
 import { API_URL } from "../auth/constants";
 import { AuthResponseError } from "../types/types";
-import LoadingScreen from "../routes/LoadingScreen";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -28,23 +29,24 @@ export default function Signup() {
 
       if (response.ok) {
         setErrorResponse("");
-        goTo("/");
+        toast.success("Cuenta creada exitosamente");
+        setTimeout(() => {
+          goTo("/");
+        }, 2000); // tiempo para que se vea el toast
       } else {
         const json = (await response.json()) as AuthResponseError;
         setErrorResponse(json.body.error);
+        toast.error(`Error: ${json.body.error}`);
       }
     } catch (error) {
       console.log(error);
+      toast.error("Ocurrió un error inesperado");
     } finally {
       setLoading(false);
     }
   }
 
   if (auth.isAuthenticated) return <Navigate to="/dashboard" />;
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   return (
     <DefaultLayout>
@@ -72,8 +74,11 @@ export default function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Create Account</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Creando cuenta..." : "Create Account"}
+        </button>
       </form>
+      <ToastContainer position="top-right" autoClose={3000} />
     </DefaultLayout>
   );
 }
