@@ -1,13 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Signup from './routes/signup.tsx'
-import Login from './routes/login.tsx'
-import Dashboard from './routes/dashboard.tsx'
-import ProtectedRoute from './routes/protectedRoute.tsx'
-import { AuthPorvider } from './auth/authProvider.tsx'
+// src/index.tsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { AuthPorvider } from './auth/authProvider.tsx';
+import { ThemeProvider } from './styles/ThemeContext'; // Proveedor del tema
+import ThemeSync from './styles/themesync'; // Sincroniza el tema con el body
 
+import './index.css';
+
+import Signup from './routes/signup.tsx';
+import Login from './routes/login.tsx';
+import Dashboard from './routes/dashboard.tsx';
+import ProtectedRoute from './routes/protectedRoute.tsx';
+import FaceRecognition from './routes/FaceRecognition.tsx';
+import DynamicQR from './routes/DynamicQR.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +23,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/face-recognition",
+    element: <FaceRecognition />,
+  },
+  {
+    path: "/dynamic-qr",
+    element: <DynamicQR />,
   },
   {
     path: "/",
@@ -30,11 +44,13 @@ const router = createBrowserRouter([
   },
 ]);
 
-
-createRoot(document.getElementById('root') as HTMLElement).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <AuthPorvider>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <ThemeSync /> {/* Aplica la clase light-mode al body si el tema lo requiere */}
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </AuthPorvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);
