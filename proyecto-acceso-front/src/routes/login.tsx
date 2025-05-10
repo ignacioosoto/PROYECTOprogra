@@ -57,7 +57,7 @@ export default function Login() {
   if (loading) {
     return (
       <DefaultLayout>
-        <LoadingScreen /> {}
+        <LoadingScreen /> { }
       </DefaultLayout>
     );
   }

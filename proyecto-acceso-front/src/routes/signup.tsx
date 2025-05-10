@@ -12,7 +12,7 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorResponse, setErrorResponse] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const auth = useAuth();
   const goTo = useNavigate();
 
@@ -46,7 +46,7 @@ export default function Signup() {
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 
@@ -55,7 +55,7 @@ export default function Signup() {
   }
 
   if (loading) {
-    return <LoadingScreen />; 
+    return <LoadingScreen />;
   }
 
   return (
