@@ -12,42 +12,51 @@ export default function VisitRegister() {
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await fetch(`${API_URL}/visits`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName,
-          company,
-          reason,
-          idNumber,
-        }),
-      });
+  try {
+    const response = await fetch(`${API_URL}/visits`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName,
+        company,
+        reason,
+        idNumber,
+      }),
+    });
 
-      if (response.ok) {
-        setErrorResponse("");
-        toast.success("Visita registrada exitosamente");
-        setFullName("");
-        setCompany("");
-        setReason("");
-        setIdNumber("");
-      } else {
-        const json = await response.json();
-        setErrorResponse(json.body?.error || "Error desconocido");
-        toast.error(`Error: ${json.body?.error || "Error desconocido"}`);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Ocurrió un error al registrar la visita");
-    } finally {
-      setLoading(false);
+    if (response.ok) {
+      const json = await response.json();
+      setErrorResponse("");
+      toast.success("Visita registrada exitosamente");
+
+      // Download the file from the server
+      const fileUrl = `${API_URL}/visits-file`;
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.download = "visits.json";
+      link.click();
+
+      // Reset form fields
+      setFullName("");
+      setCompany("");
+      setReason("");
+      setIdNumber("");
+    } else {
+      const json = await response.json();
+      setErrorResponse(json.body?.error || "Error desconocido");
+      toast.error(`Error: ${json.body?.error || "Error desconocido"}`);
     }
+  } catch (error) {
+    console.error(error);
+    toast.error("Ocurrió un error al registrar la visita");
+  } finally {
+    setLoading(false);
   }
-
+}
   return (
     <DefaultLayout>
       <form onSubmit={handleSubmit}>
@@ -68,7 +77,6 @@ export default function VisitRegister() {
           onChange={(e) => setCompany(e.target.value)}
           required
         />
-
         <label>Motivo de la visita</label>
         <input
           type="text"

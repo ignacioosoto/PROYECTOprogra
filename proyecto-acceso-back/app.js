@@ -34,3 +34,37 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 })
+const fs = require("fs");
+const path = require("path");
+
+app.post("/api/visits", (req, res) => {
+    const { fullName, company, reason, idNumber } = req.body;
+
+    // Path to the file where data will be saved
+    const filePath = path.join(__dirname, "visits.json");
+
+    // Read existing data from the file (if it exists)
+    let visits = [];
+    if (fs.existsSync(filePath)) {
+        const fileData = fs.readFileSync(filePath, "utf8");
+        visits = JSON.parse(fileData);
+    }
+
+    // Add the new visit to the array
+    const newVisit = { fullName, company, reason, idNumber };
+    visits.push(newVisit);
+
+    // Save the updated data back to the file
+    fs.writeFileSync(filePath, JSON.stringify(visits, null, 2), "utf8");
+
+    // Respond with success
+    res.status(200).json({ message: "Visit registered successfully", filePath });
+});
+app.get("/api/visits-file", (req, res) => {
+    const filePath = path.join(__dirname, "visits.json");
+    if (fs.existsSync(filePath)) {
+        res.download(filePath); // Send the file to the client
+    } else {
+        res.status(404).json({ error: "File not found" });
+    }
+});
