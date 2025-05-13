@@ -65,7 +65,10 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/face-recognition" className="button-home">Recon. Facial</Link>
         </div>
-
+{/* Botón "Registrar Visita" centrado (si agregamos otro boton sacarlo) */}
+<div className="flex justify-center mt-6 w-full">
+  <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+</div>
         {/* Botón de cambio de tema */}
         <button
           onClick={toggleTheme}
