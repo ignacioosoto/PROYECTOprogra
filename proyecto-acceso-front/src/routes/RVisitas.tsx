@@ -84,8 +84,7 @@ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
           onChange={(e) => setReason(e.target.value)}
           required
         />
-
-        <label>Número de Identificación</label>
+        <label>Fecha de la visita</label>
         <input
           type="text"
           value={idNumber}
