@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "../auth/authProvider";
 import DefaultLayout from "../layout/defaultLayout";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -14,14 +14,13 @@ export default function Signup() {
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState<string>("");
+
   const auth = useAuth();
   const goTo = useNavigate();
 
-  // Referencias para cámara
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Iniciar la cámara
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -31,11 +30,9 @@ export default function Signup() {
       }
     } catch (error) {
       console.error("Error al acceder a la cámara", error);
-      toast.error("No se pudo acceder a la cámara.");
     }
   };
 
-  // Tomar foto
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext("2d");
@@ -43,6 +40,7 @@ export default function Signup() {
         context.drawImage(videoRef.current, 0, 0, 400, 300);
         const imageData = canvasRef.current.toDataURL("image/png");
         setPhoto(imageData);
+        toast.success("Foto capturada correctamente");
       }
     }
   };
@@ -51,16 +49,17 @@ export default function Signup() {
     e.preventDefault();
     setLoading(true);
 
+    if (!photo) {
+      toast.error("Debes capturar una foto para registrar tu rostro");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          username,
-          password,
-          photo, // si quieres enviarla al backend
-        }),
+        body: JSON.stringify({ name, username, password, photo }),
       });
 
       if (response.ok) {
@@ -87,23 +86,26 @@ export default function Signup() {
   return (
     <DefaultLayout>
       <form onSubmit={handleSubmit}>
-        <h1>Signup</h1>
+        <h1>Crear Cuenta</h1>
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
-        <label>Name</label>
+
+        <label>Nombre</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
-        <label>Username</label>
+
+        <label>Usuario</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-        <label>Password</label>
+
+        <label>Contraseña</label>
         <input
           type="password"
           value={password}
@@ -111,37 +113,32 @@ export default function Signup() {
           required
         />
 
-        {/* Sección de reconocimiento facial */}
-        <div className="mt-6">
-          <h2>Reconocimiento Facial (opcional)</h2>
-          <div className="camera-container">
-            <video
-              ref={videoRef}
-              className="camera-view"
-              autoPlay
-              muted
-              playsInline
-              style={{ width: "400px", height: "300px", border: "1px solid #ccc" }}
-            />
-            <canvas ref={canvasRef} width="400" height="300" style={{ display: "none" }} />
+        <div style={{ marginTop: "1rem" }}>
+          <h2>Captura de rostro</h2>
+          <video ref={videoRef} width="400" height="300" autoPlay muted />
+          <canvas ref={canvasRef} width="400" height="300" style={{ display: "none" }} />
+          <div style={{ marginTop: "0.5rem" }}>
+            <button type="button" onClick={startCamera} className="primary-button">
+              Activar Cámara
+            </button>
+            <button type="button" onClick={takePhoto} className="primary-button">
+              Tomar Foto
+            </button>
           </div>
-          <div className="flex gap-4 mt-2">
-            <button type="button" onClick={startCamera}>Conectar Cámara</button>
-            <button type="button" onClick={takePhoto}>Capturar Foto</button>
-          </div>
-
-          {photo && (
-            <div className="mt-4">
-              <h3>Foto capturada:</h3>
-              <img src={photo} alt="capturada" style={{ width: "200px", borderRadius: "8px" }} />
-            </div>
-          )}
         </div>
 
-        <button type="submit" disabled={loading} className="mt-6">
-          {loading ? "Creando cuenta..." : "Create Account"}
+        {photo && (
+          <div style={{ marginTop: "1rem" }}>
+            <h3>Foto capturada:</h3>
+            <img src={photo} alt="captura" width={200} />
+          </div>
+        )}
+
+        <button type="submit" disabled={loading} style={{ marginTop: "1rem" }}>
+          {loading ? "Creando cuenta..." : "Crear Cuenta"}
         </button>
       </form>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </DefaultLayout>
   );

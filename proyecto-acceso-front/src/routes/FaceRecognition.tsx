@@ -1,10 +1,16 @@
-import DefaultLayout from "../layout/defaultLayout";
 import { useRef, useState } from "react";
+import DefaultLayout from "../layout/defaultLayout";
+import { API_URL } from "../auth/constants";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function FaceRecognition() {
+export default function FaceLogin() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [loading, setLoading] = useState(false);
   const [photo, setPhoto] = useState<string>("");
+  const goTo = useNavigate();
 
   const startCamera = async () => {
     try {
@@ -12,63 +18,73 @@ export default function FaceRecognition() {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
+        toast.info("Cámara activada");
       }
-    } catch (error) {
-      console.error("Error al acceder a la cámara", error);
+    } catch (err) {
+      toast.error("No se pudo acceder a la cámara");
     }
   };
 
-  const takePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext('2d');
-      if (context) {
-        context.drawImage(videoRef.current, 0, 0, 400, 300);
-        const imageData = canvasRef.current.toDataURL('image/png');
-        setPhoto(imageData);
+  const takeAndLogin = async () => {
+    if (!videoRef.current || !canvasRef.current) {
+      toast.error("Cámara no activa");
+      return;
+    }
+
+    setLoading(true);
+
+    const ctx = canvasRef.current.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(videoRef.current, 0, 0, 300, 300);
+      const imageData = canvasRef.current.toDataURL("image/png");
+      setPhoto(imageData);
+
+      try {
+        const res = await fetch(`${API_URL}/face-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ faceImage: imageData }),
+        });
+
+        const json = await res.json();
+        if (res.ok) {
+          toast.success("Login exitoso");
+          setTimeout(() => goTo("/dashboard"), 2000);
+        } else {
+          toast.error(json.body.error || "No se pudo validar el rostro");
+        }
+      } catch (err) {
+        toast.error("Error al conectar con el servidor");
       }
     }
+
+    setLoading(false);
   };
 
   return (
     <DefaultLayout>
-      <div className="page">
-        <h1>Reconocimiento Facial</h1>
+      <h1>Login por rostro</h1>
 
-        {/* Contenedor de la cámara */}
-        <div className="camera-container">
-          <video
-            ref={videoRef}
-            className="camera-view"
-            autoPlay
-            muted
-            playsInline
-          />
-        </div>
+      <video ref={videoRef} width="300" height="300" autoPlay muted playsInline />
+      <canvas ref={canvasRef} width="300" height="300" style={{ display: "none" }} />
 
-        {/* Botones de cámara */}
-        <div className="flex gap-4 justify-center mt-4 flex-wrap">
-          <button className="primary-button" onClick={startCamera}>Conectar Cámara</button>
-          <button className="primary-button" onClick={takePhoto}>Capturar Foto</button>
-        </div>
-
-        <canvas ref={canvasRef} width="400" height="300" style={{ display: "none" }} />
-
-        {/* Imagen capturada */}
-        {photo && (
-          <div className="flex flex-col items-center mt-4">
-            <h2>Foto capturada:</h2>
-            <img src={photo} alt="captured" className="captured-photo" />
-            <a
-              href={photo}
-              download="foto-reconocimiento.png"
-              className="primary-button"
-              style={{ marginTop: "1rem", display: "inline-block" }}
-            >
-              Descargar Imagen
-            </a>
-          </div>
-        )}
+      <div style={{ marginTop: "1rem" }}>
+        <button onClick={startCamera} className="primary-button">
+          Activar Cámara
+        </button>
+        <button onClick={takeAndLogin} disabled={loading} className="primary-button">
+          {loading ? "Validando..." : "Validar Rostro"}
+        </button>
       </div>
+
+      {photo && (
+        <div style={{ marginTop: "1rem" }}>
+          <h3>Imagen capturada:</h3>
+          <img src={photo} alt="captura" width={200} />
+        </div>
+      )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </DefaultLayout>
   );
 }
