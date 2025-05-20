@@ -14,7 +14,7 @@ import Dashboard from './routes/dashboard.tsx';
 import ProtectedRoute from './routes/protectedRoute.tsx';
 import FaceRecognition from './routes/FaceRecognition.tsx';
 import DynamicQR from './routes/DynamicQR.tsx';
-
+import RVisitas from './routes/RVisitas.tsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/dynamic-qr",
     element: <DynamicQR />,
+  },
+  {
+    path: "/RVisitas",
+    element: <RVisitas />, 
   },
   {
     path: "/",
