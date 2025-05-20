@@ -2,60 +2,44 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { generateAccessToken, generateRefreshToken } = require("../auth/generateTokens");
 const getUserInfo = require("../lib/getUserInfo");
-const Token = require("../esquema/token")
-
-//ingresar un nuevo usuario conectado con la base de datos
+const Token = require("./token");
 
 const userSchema = new mongoose.Schema({
-    id: { type: Object },
-    username: { type: String, require: true, unique: true },
-    password: { type: String, require: true },
-    name: { type: String, require: true },
-})
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  faceImage: { type: String }, // base64 de imagen
+});
 
-
-//encriptado de la clave password
 userSchema.pre("save", function (next) {
-    if (this.isModified("password") || this.isNew) {
-        const document = this;
-        bcrypt.hash(document.password, 10, (err, hash) => {
-            if (err) {
-                next(err);
-            } else {
-                document.password = hash;
-                next();
-            }
-        })
-    } else {
-        next();
-    }
-})
+  if (this.isModified("password") || this.isNew) {
+    bcrypt.hash(this.password, 10, (err, hash) => {
+      if (err) return next(err);
+      this.password = hash;
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
-//comprobacion de que el usuario ingresado en signup no tiene vinculado ningun registro anterior
 userSchema.methods.usernameExist = async function (username) {
-    const result = await mongoose.model("User").findOne({ username })
-    return !!result > 0
-}
+  const result = await mongoose.model("User").findOne({ username });
+  return !!result;
+};
 
 userSchema.methods.comparePassword = async function (password, hash) {
-    const same = await bcrypt.compare(password, hash);
-    return same;
-}
+  return await bcrypt.compare(password, hash);
+};
 
 userSchema.methods.createAccessToken = function () {
-    return generateAccessToken(getUserInfo(this));
-}
+  return generateAccessToken(getUserInfo(this));
+};
 
 userSchema.methods.createRefreshToken = async function () {
-    const refreshToken = generateRefreshToken(getUserInfo(this))
-    try {
-        await new Token({ token: refreshToken }).save();
-
-        return refreshToken;
-    } catch (error) {
-        console.log(error);
-
-    }
-}
+  const refreshToken = generateRefreshToken(getUserInfo(this));
+  await new Token({ token: refreshToken }).save();
+  return refreshToken;
+};
 
 module.exports = mongoose.model("User", userSchema);

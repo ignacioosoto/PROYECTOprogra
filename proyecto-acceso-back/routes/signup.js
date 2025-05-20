@@ -1,3 +1,4 @@
+// Definimos la ruta de signup
 const router = require("express").Router();
 const { jsonResponse } = require("../lib/jsonResponse");
 const User = require("../esquema/user")
