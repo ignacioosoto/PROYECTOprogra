@@ -15,6 +15,8 @@ import ProtectedRoute from './routes/protectedRoute.tsx';
 import FaceRecognition from './routes/FaceRecognition.tsx';
 import DynamicQR from './routes/DynamicQR.tsx';
 import RVisitas from './routes/RVisitas.tsx';
+import NewOwner from './routes/newowner.tsx';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,14 +36,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/RVisitas",
-    element: <RVisitas />, 
+    element: <RVisitas />,
   },
   {
-    path: "/",
+    path: "/newowner",
+    element: <ProtectedRoute />, // Protect this route!
+    children: [
+      {
+        path: "",
+        element: <NewOwner />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/dashboard",
+        path: "",
         element: <Dashboard />,
       },
     ],
