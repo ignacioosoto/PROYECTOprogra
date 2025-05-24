@@ -1,52 +1,81 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { AuthResponse } from "../types/types";
 
-interface AuthPorviderPorps {
-    children: React.ReactNode
+interface AuthProviderProps {
+  children: React.ReactNode;
 }
 
-const AuthContext = createContext({
-    isAuthenticated: false,
-    getAccessToken: () => { },
-    saveUser: (userData: AuthResponse) => { },
-    getRefreshToken: () => { },
-})
-
-export function AuthPorvider({ children }: AuthPorviderPorps) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [accessToken, setAccessToken] = useState<string>("");
-    const [refreshToken, setRefreshToken] = useState<string>("");
-
-    function getAccessToken() {
-        return accessToken;
-    }
-
-    function getRefreshToken() {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const { refreshToken } = JSON.parse(token);
-            return refreshToken;
-        }
-    }
-
-
-    //guarda la informacion de los accesstokens y del usuario para decir que estamos autentificados
-    function saveUser(userData: AuthResponse) {
-        setAccessToken(userData.body.accessToken);
-        setRefreshToken(userData.body.refreshToken);
-
-        localStorage.setItem("token", JSON.stringify(userData.body.refreshToken));
-        setIsAuthenticated(true);
-
-
-    }
-
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, getAccessToken, saveUser, getRefreshToken }}>
-            {children}
-        </AuthContext.Provider>
-    );
-
+interface AuthContextType {
+  isAuthenticated: boolean;
+  getAccessToken: () => string | undefined;
+  saveUser: (userData: AuthResponse) => void;
+  getRefreshToken: () => string | undefined;
+  signout: () => void;
 }
 
-export const useAuth = () => useContext(AuthContext)
+const AuthContext = createContext<AuthContextType>({
+  isAuthenticated: false,
+  getAccessToken: () => undefined,
+  saveUser: () => {},
+  getRefreshToken: () => undefined,
+  signout: () => {},
+});
+
+export function AuthPorvider({ children }: AuthProviderProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessToken, setAccessToken] = useState<string>("");
+  const [refreshToken, setRefreshToken] = useState<string>("");
+
+  useEffect(() => {
+    // Check if user is already authenticated on mount
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+      setRefreshToken(token);
+    }
+  }, []);
+
+  function getAccessToken() {
+    return accessToken;
+  }
+
+  function getRefreshToken() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      return token;
+    }
+    return undefined;
+  }
+
+  // Save user tokens and set authenticated state
+  function saveUser(userData: AuthResponse) {
+    setAccessToken(userData.body.accessToken);
+    setRefreshToken(userData.body.refreshToken);
+    localStorage.setItem("token", userData.body.refreshToken);
+    setIsAuthenticated(true);
+  }
+
+  // Sign out user
+  function signout() {
+    setIsAuthenticated(false);
+    setAccessToken("");
+    setRefreshToken("");
+    localStorage.removeItem("token");
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        getAccessToken,
+        saveUser,
+        getRefreshToken,
+        signout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () => useContext(AuthContext);
