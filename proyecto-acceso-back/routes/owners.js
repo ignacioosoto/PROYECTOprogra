@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const Owner = require("../esquema/owner");
+const Owner = require("../esquema/owner"); // Use the correct path to your Owner model
+const fs = require("fs");
+const path = require("path");
 
-
+// POST: Crear propietario (sin imagen)
 router.post("/", async (req, res) => {
   const { fullName, rut, address } = req.body;
 
