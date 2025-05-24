@@ -36,25 +36,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/RVisitas",
-    element: <RVisitas />,
+    element: <RVisitas />, 
   },
   {
     path: "/newowner",
-    element: <ProtectedRoute />, // Protect this route!
-    children: [
-      {
-        path: "",
-        element: <NewOwner />,
-      },
-    ],
+    element: <NewOwner />, // agrega esta línea si no existe
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: <ProtectedRoute />,
     children: [
       {
-        path: "",
-        element: <Dashboard />,
+        path: "dashboard",
+        element:<Dashboard/>, // Remove {null}, just use <Dashboard />
       },
     ],
   },
