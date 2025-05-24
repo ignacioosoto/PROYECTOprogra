@@ -6,6 +6,7 @@ import { API_URL } from "../auth/constants";
 import { AuthResponseError } from "../types/types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingScreen from "../routes/LoadingScreen";
 
 export default function NewOwner() {
   const [fullName, setFullName] = useState("");
@@ -17,6 +18,7 @@ export default function NewOwner() {
   const goTo = useNavigate();
 
   if (!auth.isAuthenticated) return <Navigate to="/" replace />;
+  if (loading) return <LoadingScreen />;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +35,7 @@ export default function NewOwner() {
         setErrorResponse("");
         toast.success("Propietario agregado exitosamente");
         setTimeout(() => {
-          goTo("/owners"); // redirige a una lista o página de propietarios, si existe
+          goTo("/dashboard");
         }, 2000);
       } else {
         const json = (await response.json()) as AuthResponseError;
