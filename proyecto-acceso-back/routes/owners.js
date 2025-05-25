@@ -2,27 +2,32 @@ const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
 
+// Ruta para crear propietario con vector facial
+router.post("/with-face", async (req, res) => {
+  const { fullName, rut, address, descriptor } = req.body;
 
-router.post("/", async (req, res) => {
-  const { fullName, rut, address } = req.body;
-
-  if (!fullName || !rut || !address) {
-    return res.status(400).json({ body: { error: "Todos los campos son obligatorios." } });
+  if (!fullName || !rut || !address || !descriptor || descriptor.length !== 128) {
+    return res.status(400).json({ body: { error: "Todos los campos y el vector son obligatorios" } });
   }
 
   try {
-    const existing = await Owner.findOne({ rut });
-    if (existing) {
-      return res.status(409).json({ body: { error: "El RUT ya está registrado." } });
+    const exists = await Owner.findOne({ rut });
+    if (exists) {
+      return res.status(409).json({ body: { error: "El RUT ya está registrado" } });
     }
 
-    const newOwner = new Owner({ fullName, rut, address });
-    await newOwner.save();
+    const newOwner = new Owner({
+      fullName,
+      rut,
+      address,
+      faceDescriptor: descriptor,
+    });
 
-    res.status(201).json({ message: "Propietario creado exitosamente" });
+    await newOwner.save();
+    res.status(201).json({ message: "Propietario creado exitosamente con vector facial" });
   } catch (err) {
     console.error("Error al guardar propietario:", err);
-    res.status(500).json({ body: { error: "Error del servidor al guardar propietario" } });
+    res.status(500).json({ body: { error: "Error del servidor" } });
   }
 });
 
