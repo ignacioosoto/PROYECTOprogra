@@ -355,3 +355,48 @@ body.light-mode .info-bar {
   background-color: var(--accent-color);
   color: var(--primary-color);
 }
+
+/* Posición del botón cerrar sesión arriba izquierda dentro del main */
+.main-content.relative {
+  position: relative;
+  /* Asegura que los hijos absolutos se posicionen aquí */
+}
+
+.btn-logout {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  z-index: 1100;
+
+  width: auto;
+  /* que solo ocupe ancho automático */
+  display: inline-block;
+  /* para que no tome todo el ancho */
+  white-space: nowrap;
+  /* evitar que el texto se parta en varias líneas */
+}
+
+/* Hover para modo oscuro */
+.btn-logout:hover {
+  background-color: #c0392b;
+}
+
+/* Modo claro */
+body.light .btn-logout {
+  background-color: #2979ff;
+  /* azul eléctrico */
+  color: white;
+}
+
+/* Hover modo claro */
+body.light .btn-logout:hover {
+  background-color: #1565c0;
+}
