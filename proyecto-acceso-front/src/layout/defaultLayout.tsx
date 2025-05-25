@@ -1,12 +1,14 @@
 // src/layouts/DefaultLayout.tsx
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useTheme } from '../styles/ThemeContext'; // Importamos el hook del contexto de tema
+import { useTheme } from '../styles/ThemeContext'; // Hook personalizado para manejar el tema
+import ThemeSwitch from '../styles/ThemeSwitch'; // Nuevo switch de cambio de tema
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
 }
 
+// Función para obtener la hora/fecha actual formateada (Chile)
 function getFormattedTime() {
   const now = new Date();
   const time = now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
@@ -17,19 +19,9 @@ function getFormattedTime() {
 
 export default function DefaultLayout({ children }: DefaultLayoutProps) {
   const [dateTime, setDateTime] = useState(getFormattedTime());
-  const { theme, toggleTheme } = useTheme(); // Obtener el tema actual y la función para alternarlo
+  const { theme } = useTheme();
 
-  useEffect(() => {
-    // Cambiar la clase del body según el tema
-    const body = document.body;
-    body.classList.remove('dark', 'light');
-    body.classList.add(theme);
-
-    return () => {
-      body.classList.remove('dark', 'light');
-    };
-  }, [theme]);
-
+  // Actualizamos la hora cada minuto
   useEffect(() => {
     const interval = setInterval(() => {
       setDateTime(getFormattedTime());
@@ -38,7 +30,11 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
   }, []);
 
   return (
-    <main className="main-content">
+    <main className="main-content relative min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
+
+      {/* Switch de tema en la esquina superior derecha */}
+      <ThemeSwitch />
+
       {/* Contenedor principal */}
       <div className="flex flex-col items-center w-full">
 
@@ -51,34 +47,30 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           </div>
         </div>
 
-        {/* Imagen de la casa op */}
+        {/* Imagen principal (fachada edificio) */}
         <img
           src="https://images.unsplash.com/photo-1568605114967-8130f3a36994"
           alt="Edificio Residencial"
           className="rounded-b-2xl shadow-lg w-full max-w-4xl h-auto"
         />
 
-        {/* Botones para navegar */}
+        {/* Botones principales de navegación */}
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
           <Link to="/" className="button-home">Login</Link>
           <Link to="/signup" className="button-home">Signup</Link>
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/face-recognition" className="button-home">Recon. Facial</Link>
         </div>
-{/* Botón "Registrar Visita" centrado (si agregamos otro boton sacarlo) */}
-<div className="flex justify-center mt-6 w-full">
-  <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
-</div>
-        {/* Botón de cambio de tema */}
-        <button
-          onClick={toggleTheme}
-          className="mt-4 p-2 bg-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
-        >
-          Cambiar Tema
-        </button>
+
+        {/* Botón individual para registrar visita */}
+        <div className="flex justify-center mt-6 w-full">
+          <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+        </div>
+
+        {/* Nota: Eliminamos el botón viejo de cambiar tema porque ahora usamos <ThemeSwitch /> */}
       </div>
 
-      {/* Aquí renderizas los hijos */}
+      {/* Renderiza el contenido hijo (por ejemplo, formularios o dashboards) */}
       <div className="mt-8">
         {children}
       </div>

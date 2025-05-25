@@ -68,13 +68,6 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
         </div>
-        {/* Botón de cambio de tema */}
-        <button
-          onClick={toggleTheme}
-          className="mt-4 p-2 bg-gray-300 rounded-md dark:bg-gray-800 dark:text-white"
-        >
-          Cambiar Tema
-        </button>
         {/* Botón de cerrar sesión */}
         <button
           onClick={() => {

@@ -1,10 +1,10 @@
-// src/index.tsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AuthPorvider } from './auth/authProvider.tsx';
-import { ThemeProvider } from './styles/ThemeContext'; // Proveedor del tema
-import ThemeSync from './styles/themesync'; // Sincroniza el tema con el body
+import { ThemeProvider } from './styles/ThemeContext';
+import ThemeSync from './styles/themesync';
+import ThemeSwitch from './styles/ThemeSwitch';  // Importa tu switch aquí
 
 import './index.css';
 
@@ -36,11 +36,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/RVisitas",
-    element: <RVisitas />, 
+    element: <RVisitas />,
   },
   {
     path: "/newowner",
-    element: <NewOwner />, // agrega esta línea si no existe
+    element: <NewOwner />,
   },
   {
     path: "/",
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "dashboard",
-        element:<Dashboard/>, // Remove {null}, just use <Dashboard />
+        element: <Dashboard children={undefined} />,
       },
     ],
   },
@@ -58,7 +58,11 @@ createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <AuthPorvider>
       <ThemeProvider>
-        <ThemeSync /> {/* Aplica la clase light-mode al body si el tema lo requiere */}
+        <ThemeSync />
+
+        {/* Aquí agregamos el switch para que esté visible siempre */}
+        <ThemeSwitch />
+
         <RouterProvider router={router} />
       </ThemeProvider>
     </AuthPorvider>
