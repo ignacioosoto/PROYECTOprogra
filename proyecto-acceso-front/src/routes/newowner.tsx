@@ -49,14 +49,14 @@ export default function NewOwner() {
     }
   };
 
-  const captureFace = async () => {
-    if (!modelsLoaded) {
-      toast.error("Los modelos aún no están listos");
-      return;
-    }
+  const stopCamera = () => {
+    const stream = videoRef.current?.srcObject as MediaStream;
+    stream?.getTracks().forEach((track) => track.stop());
+  };
 
-    if (!videoRef.current) {
-      toast.error("No hay cámara disponible");
+  const captureFace = async () => {
+    if (!modelsLoaded || !videoRef.current) {
+      toast.error("Modelos no cargados o cámara no disponible");
       return;
     }
 
@@ -70,7 +70,7 @@ export default function NewOwner() {
       setDescriptor(vector);
       setFaceScanned(true);
 
-      // Capturar imagen del video
+      // Captura de imagen
       const canvas = document.createElement("canvas");
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
@@ -78,10 +78,7 @@ export default function NewOwner() {
       const imageDataUrl = canvas.toDataURL("image/png");
       setCapturedImage(imageDataUrl);
 
-      // Detener la cámara
-      const stream = videoRef.current.srcObject as MediaStream;
-      stream?.getTracks().forEach((track) => track.stop());
-
+      stopCamera();
       toast.success("Rostro capturado correctamente");
     } else {
       toast.error("No se detectó ningún rostro");
@@ -135,7 +132,6 @@ export default function NewOwner() {
         <label>Domicilio</label>
         <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
 
-        {/* Mostrar cámara o imagen capturada */}
         {capturedImage ? (
           <img
             src={capturedImage}
@@ -156,13 +152,31 @@ export default function NewOwner() {
           />
         )}
 
-        <div>
-          <button type="button" onClick={startCamera} disabled={faceScanned || loading}>
-            Iniciar cámara
-          </button>
-          <button type="button" onClick={captureFace} disabled={!modelsLoaded || faceScanned || loading}>
-            Escanear rostro
-          </button>
+        <div style={{ marginTop: "1rem" }}>
+          {!faceScanned && (
+            <>
+              <button type="button" onClick={startCamera} disabled={loading}>
+                Iniciar cámara
+              </button>
+              <button type="button" onClick={captureFace} disabled={!modelsLoaded || loading}>
+                Escanear rostro
+              </button>
+            </>
+          )}
+
+          {capturedImage && (
+            <button
+              type="button"
+              onClick={() => {
+                setCapturedImage(null);
+                setFaceScanned(false);
+                setDescriptor(null);
+                startCamera(); // reinicia cámara
+              }}
+            >
+              Repetir foto
+            </button>
+          )}
         </div>
 
         <button type="submit" disabled={loading || !descriptor}>

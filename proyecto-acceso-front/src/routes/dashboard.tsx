@@ -78,7 +78,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/signup" className="button-home">Agregar Administrador</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
-          <Link to="/face-recognition" className="button-home">Recon. Facial</Link>
+          <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
         </div>
 
