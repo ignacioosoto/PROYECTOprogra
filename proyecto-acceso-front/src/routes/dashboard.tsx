@@ -61,10 +61,8 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
 
         {/* Botones para navegar */}
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
-          <Link to="/" className="button-home">Login</Link>
-          <Link to="/signup" className="button-home">Signup</Link>
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
-          <Link to="/face-recognition" className="button-home">Recon. Facial</Link>
+          <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
         </div>

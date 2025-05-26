@@ -32,3 +32,44 @@ router.post("/with-face", async (req, res) => {
 });
 
 module.exports = router;
+const euclideanDistance = (v1, v2) => {
+  return Math.sqrt(v1.reduce((sum, val, i) => sum + Math.pow(val - v2[i], 2), 0));
+};
+
+router.post("/verify-face", async (req, res) => {
+  const { descriptor } = req.body;
+
+  if (!descriptor || descriptor.length !== 128) {
+    return res.status(400).json({ error: "Vector facial inválido" });
+  }
+
+  try {
+    const owners = await Owner.find({ faceDescriptor: { $exists: true } });
+
+    let bestMatch = null;
+    let minDistance = Infinity;
+
+    for (const owner of owners) {
+      const distance = euclideanDistance(descriptor, owner.faceDescriptor);
+      if (distance < minDistance) {
+        minDistance = distance;
+        bestMatch = owner;
+      }
+    }
+
+    if (minDistance < 0.6) {
+      return res.json({
+        success: true,
+        owner: {
+          fullName: bestMatch.fullName,
+          address: bestMatch.address,
+        },
+      });
+    } else {
+      return res.json({ success: false, message: "Acceso denegado: rostro no reconocido" });
+    }
+  } catch (err) {
+    console.error("Error en verificación facial:", err);
+    res.status(500).json({ error: "Error del servidor" });
+  }
+});
