@@ -3,6 +3,7 @@ import DefaultLayout from "../layout/defaultLayout";
 import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthLayout from "./dashboard";
 
 export default function AddBuilding() {
   const [name, setName] = useState("");
@@ -36,7 +37,7 @@ export default function AddBuilding() {
   };
 
   return (
-    <DefaultLayout>
+    <AuthLayout>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 max-w-md mx-auto mt-8"
@@ -70,6 +71,6 @@ export default function AddBuilding() {
 
         <ToastContainer position="top-right" autoClose={3000} />
       </form>
-    </DefaultLayout>
+    </AuthLayout>
   );
 }
