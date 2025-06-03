@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/authProvider";
-import DefaultLayout from "../layout/defaultLayout";
 import { Navigate, useNavigate } from "react-router-dom";
 import { API_URL } from "../auth/constants";
 import { AuthResponseError } from "../types/types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthLayout from "./dashboard";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -85,10 +85,9 @@ export default function Signup() {
   //if (auth.isAuthenticated) return <Navigate to="/dashboard" />;
 
   return (
-    <DefaultLayout>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto mt-8">
-        <h1 className="text-2xl font-bold">Signup</h1>
-
+    <AuthLayout>
+      <form onSubmit={handleSubmit}>
+        <h1>Signup</h1>
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
 
         <label>Name</label>
@@ -127,6 +126,6 @@ export default function Signup() {
         </button>
       </form>
       <ToastContainer position="top-right" autoClose={3000} />
-    </DefaultLayout>
+    </AuthLayout>
   );
 }
