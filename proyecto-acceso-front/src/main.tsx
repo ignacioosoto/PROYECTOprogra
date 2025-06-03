@@ -34,6 +34,12 @@ const router = createBrowserRouter([
     element: <FaceRecognition />,
   },
   {
+  path: "/dynamicqr",
+  element: <DynamicQR />,
+},
+{
+},
+  {
     path: "/dynamic-qr",
     element: <DynamicQR />,
   },
