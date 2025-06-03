@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { AuthPorvider } from './auth/authProvider.tsx';
+import { AuthPorvider } from './auth/authProvider';
 import { ThemeProvider } from './styles/ThemeContext';
 import ThemeSync from './styles/themesync';
 import ThemeSwitch from './styles/ThemeSwitch';
@@ -10,20 +10,21 @@ import ThemeSwitch from './styles/ThemeSwitch';
 import './index.css';
 
 // Rutas principales
-import Signup from './routes/signup.tsx';
-import Login from './routes/login.tsx';
-import Dashboard from './routes/dashboard.tsx';
-import ProtectedRoute from './routes/protectedRoute.tsx';
-import FaceRecognition from './routes/FaceRecognition.tsx';
-import DynamicQR from './routes/DynamicQR.tsx';
-import RVisitas from './routes/RVisitas.tsx';
-import NewOwner from './routes/newowner.tsx';
-import FaceVerification from './routes/FaceVerification.tsx'; // ✅ NUEVA ruta
+import Signup from './routes/signup';
+import Login from './routes/login';
+import Dashboard from './routes/dashboard';
+import ProtectedRoute from './routes/protectedRoute';
+import FaceRecognition from './routes/FaceRecognition';
+import DynamicQR from './routes/DynamicQR';
+import RVisitas from './routes/RVisitas';
+import NewOwner from './routes/newowner';
+import FaceVerification from './routes/FaceVerification';
+import AddBuilding from './routes/AddBuilding';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Login />, // login es la raíz
+    element: <Login />,
   },
   {
     path: "/signup",
@@ -46,8 +47,12 @@ const router = createBrowserRouter([
     element: <NewOwner />,
   },
   {
-    path: "/verificar", // ✅ Ruta para verificación facial
+    path: "/verificar",
     element: <FaceVerification />,
+  },
+  {
+    path: "/addbuilding",
+    element: <AddBuilding />,
   },
   {
     path: "/dashboard",
@@ -55,7 +60,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Dashboard children={undefined} />,
+        element: <Dashboard />,
       },
     ],
   },

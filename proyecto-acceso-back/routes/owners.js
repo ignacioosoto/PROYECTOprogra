@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
+const sendEmail = require("../lib/sendEmail");
 
-// Ruta para crear propietario con vector facial
+// Crear propietario con vector facial
 router.post("/with-face", async (req, res) => {
-  const { fullName, rut, address, descriptor } = req.body;
+  const { fullName, rut, buildingId, department, email, faceDescriptor } = req.body;
 
-  if (!fullName || !rut || !address || !descriptor || descriptor.length !== 128) {
+  if (!fullName || !rut || !buildingId || !department || !email || !faceDescriptor || faceDescriptor.length !== 128) {
     return res.status(400).json({ body: { error: "Todos los campos y el vector son obligatorios" } });
   }
 
@@ -19,19 +20,29 @@ router.post("/with-face", async (req, res) => {
     const newOwner = new Owner({
       fullName,
       rut,
-      address,
-      faceDescriptor: descriptor,
+      email,
+      faceDescriptor,
+      buildingId,
+      department,
     });
 
     await newOwner.save();
-    res.status(201).json({ message: "Propietario creado exitosamente con vector facial" });
+
+    const htmlContent = `
+      <h1>Bienvenido a su departamento, ${fullName}</h1>
+      <p>Su registro se ha realizado correctamente. Puede comenzar a utilizar el sistema de acceso.</p>
+    `;
+
+    await sendEmail(email, "Confirmación de Registro", htmlContent);
+
+    res.status(201).json({ message: "Propietario creado exitosamente con vector facial y correo enviado" });
   } catch (err) {
     console.error("Error al guardar propietario:", err);
     res.status(500).json({ body: { error: "Error del servidor" } });
   }
 });
 
-module.exports = router;
+// Verificación facial
 const euclideanDistance = (v1, v2) => {
   return Math.sqrt(v1.reduce((sum, val, i) => sum + Math.pow(val - v2[i], 2), 0));
 };
@@ -44,7 +55,8 @@ router.post("/verify-face", async (req, res) => {
   }
 
   try {
-    const owners = await Owner.find({ faceDescriptor: { $exists: true } });
+    const owners = await Owner.find({ faceDescriptor: { $exists: true } }).populate("buildingId");
+
 
     let bestMatch = null;
     let minDistance = Infinity;
@@ -58,13 +70,15 @@ router.post("/verify-face", async (req, res) => {
     }
 
     if (minDistance < 0.6) {
-      return res.json({
-        success: true,
-        owner: {
-          fullName: bestMatch.fullName,
-          address: bestMatch.address,
-        },
-      });
+return res.json({
+  success: true,
+  owner: {
+    fullName: bestMatch.fullName,
+    building: bestMatch.buildingId?.name || "Desconocido",
+    department: bestMatch.department,
+  },
+});
+
     } else {
       return res.json({ success: false, message: "Acceso denegado: rostro no reconocido" });
     }
@@ -73,3 +87,5 @@ router.post("/verify-face", async (req, res) => {
     res.status(500).json({ error: "Error del servidor" });
   }
 });
+
+module.exports = router;

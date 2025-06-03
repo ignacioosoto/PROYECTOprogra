@@ -1,9 +1,9 @@
-// Traemos librerías para el backend
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const buildingRoutes = require("./routes/buildingRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -30,7 +30,8 @@ app.use("/api/user", require("./routes/user"));
 app.use("/api/todos", require("./routes/todos"));
 app.use("/api/refresh-token", require("./routes/refreshToken"));
 app.use("/api/signout", require("./routes/signout"));
-app.use("/api/owners", require("./routes/owners")); // Nueva ruta para propietarios
+app.use("/api/owners", require("./routes/owners"));
+app.use("/api/buildings", buildingRoutes);
 
 // Ruta de prueba
 app.get("/", (req, res) => {

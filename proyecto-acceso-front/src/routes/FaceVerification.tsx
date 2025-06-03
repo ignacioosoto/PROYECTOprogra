@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function FaceVerification() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
-  const [result, setResult] = useState<null | { fullName: string; address: string }>(null);
+  const [result, setResult] = useState<null | { fullName: string; building: string; department: string }>(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +33,7 @@ export default function FaceVerification() {
 
     loadModels();
 
-    return () => stopCamera(); // Limpieza al desmontar
+    return () => stopCamera();
   }, []);
 
   const startCamera = async () => {
@@ -125,7 +125,8 @@ export default function FaceVerification() {
         <div style={{ marginTop: "1rem" }}>
           <h3>✅ Acceso autorizado</h3>
           <p><strong>Propietario:</strong> {result.fullName}</p>
-          <p><strong>Domicilio:</strong> {result.address}</p>
+          <p><strong>Edificio:</strong> {result.building}</p>
+          <p><strong>Departamento:</strong> {result.department}</p>
         </div>
       )}
 
