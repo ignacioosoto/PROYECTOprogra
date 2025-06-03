@@ -12,6 +12,7 @@ export default function NewOwner() {
   const [fullName, setFullName] = useState("");
   const [rut, setRut] = useState("");
   const [address, setAddress] = useState("");
+  const [email, setEmail] = useState(""); // 👈 nuevo estado
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
@@ -70,7 +71,6 @@ export default function NewOwner() {
       setDescriptor(vector);
       setFaceScanned(true);
 
-      // Captura de imagen
       const canvas = document.createElement("canvas");
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
@@ -100,7 +100,7 @@ export default function NewOwner() {
       const response = await fetch(`${API_URL}/owners/with-face`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, rut, address, descriptor }),
+        body: JSON.stringify({ fullName, rut, address, email, descriptor }), // 👈 incluye email
       });
 
       if (response.ok) {
@@ -131,6 +131,9 @@ export default function NewOwner() {
 
         <label>Domicilio</label>
         <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
+
+        <label>Correo electrónico</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /> {/* 👈 nuevo input */}
 
         {capturedImage ? (
           <img
@@ -171,7 +174,7 @@ export default function NewOwner() {
                 setCapturedImage(null);
                 setFaceScanned(false);
                 setDescriptor(null);
-                startCamera(); // reinicia cámara
+                startCamera();
               }}
             >
               Repetir foto

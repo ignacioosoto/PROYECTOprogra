@@ -4,9 +4,9 @@ const Owner = require("../esquema/owner");
 
 // Ruta para crear propietario con vector facial
 router.post("/with-face", async (req, res) => {
-  const { fullName, rut, address, descriptor } = req.body;
+  const { fullName, rut, address, descriptor, email } = req.body;
 
-  if (!fullName || !rut || !address || !descriptor || descriptor.length !== 128) {
+  if (!fullName || !rut || !address || !email || !descriptor || descriptor.length !== 128) {
     return res.status(400).json({ body: { error: "Todos los campos y el vector son obligatorios" } });
   }
 
@@ -20,6 +20,7 @@ router.post("/with-face", async (req, res) => {
       fullName,
       rut,
       address,
+      email,
       faceDescriptor: descriptor,
     });
 
@@ -32,6 +33,7 @@ router.post("/with-face", async (req, res) => {
 });
 
 module.exports = router;
+
 const euclideanDistance = (v1, v2) => {
   return Math.sqrt(v1.reduce((sum, val, i) => sum + Math.pow(val - v2[i], 2), 0));
 };
