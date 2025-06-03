@@ -190,3 +190,5 @@ export default function NewOwner() {
     </DefaultLayout>
   );
 }
+
+// ntyg ersq vkgl swwd contraseña de aplicacion
