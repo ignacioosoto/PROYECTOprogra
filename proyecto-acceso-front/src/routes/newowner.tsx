@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../auth/authProvider";
-import DefaultLayout from "../layout/defaultLayout";
 import { Navigate, useNavigate } from "react-router-dom";
 import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as faceapi from "face-api.js";
 import LoadingScreen from "../routes/LoadingScreen";
+import AuthLayout from "./dashboard";
 
 export default function NewOwner() {
   const [fullName, setFullName] = useState("");
@@ -119,7 +119,7 @@ export default function NewOwner() {
   };
 
   return (
-    <DefaultLayout>
+    <AuthLayout>
       <form onSubmit={handleSubmit}>
         <h1>Agregar Propietario</h1>
 
@@ -184,6 +184,6 @@ export default function NewOwner() {
         </button>
       </form>
       <ToastContainer position="top-right" autoClose={3000} />
-    </DefaultLayout>
+    </AuthLayout>
   );
 }
