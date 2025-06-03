@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../auth/authProvider";
 import DefaultLayout from "../layout/defaultLayout";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -11,13 +11,49 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [nameError, setNameError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
+
   const auth = useAuth();
   const goTo = useNavigate();
 
+  useEffect(() => {
+    if (name && (!/^[a-zA-Z\s]+$/.test(name) || name.length > 50)) {
+      setNameError("Solo letras y espacios. Máx. 50 caracteres.");
+    } else {
+      setNameError("");
+    }
+  }, [name]);
+
+  useEffect(() => {
+    if (username && (username.length < 4 || username.length > 20)) {
+      setUsernameError("Debe tener entre 4 y 20 caracteres.");
+    } else {
+      setUsernameError("");
+    }
+  }, [username]);
+
+  useEffect(() => {
+    if (password && password.length < 8) {
+      setPasswordError("Debe tener al menos 8 caracteres.");
+    } else {
+      setPasswordError("");
+    }
+  }, [password]);
+
+  const isValid = () => {
+    return !nameError && !usernameError && !passwordError;
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!isValid()) return;
+
     setLoading(true);
 
     try {
@@ -32,7 +68,7 @@ export default function Signup() {
         toast.success("Cuenta creada exitosamente");
         setTimeout(() => {
           goTo("/");
-        }, 2000); // tiempo para que se vea el toast
+        }, 2000);
       } else {
         const json = (await response.json()) as AuthResponseError;
         setErrorResponse(json.body.error);
@@ -50,9 +86,11 @@ export default function Signup() {
 
   return (
     <DefaultLayout>
-      <form onSubmit={handleSubmit}>
-        <h1>Signup</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-md mx-auto mt-8">
+        <h1 className="text-2xl font-bold">Signup</h1>
+
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
+
         <label>Name</label>
         <input
           type="text"
@@ -60,6 +98,8 @@ export default function Signup() {
           onChange={(e) => setName(e.target.value)}
           required
         />
+        {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
+
         <label>Username</label>
         <input
           type="text"
@@ -67,6 +107,8 @@ export default function Signup() {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+        {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
+
         <label>Password</label>
         <input
           type="password"
@@ -74,7 +116,13 @@ export default function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" disabled={loading}>
+        {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+
+        <button
+          type="submit"
+          disabled={loading || !isValid()}
+          className="bg-indigo-200 rounded p-2 font-mono disabled:opacity-50"
+        >
           {loading ? "Creando cuenta..." : "Create Account"}
         </button>
       </form>
