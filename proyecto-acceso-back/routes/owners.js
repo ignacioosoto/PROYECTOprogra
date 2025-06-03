@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
+const sendEmail = require("../lib/sendEmail");
 
 // Ruta para crear propietario con vector facial
 router.post("/with-face", async (req, res) => {
@@ -25,14 +26,20 @@ router.post("/with-face", async (req, res) => {
     });
 
     await newOwner.save();
-    res.status(201).json({ message: "Propietario creado exitosamente con vector facial" });
+
+    const htmlContent = `
+      <h1>Bienvenido a su departamento, ${fullName}</h1>
+      <p>Su registro se ha realizado correctamente. Puede comenzar a utilizar el sistema de acceso.</p>
+    `;
+
+    await sendEmail(email, "Confirmación de Registro", htmlContent);
+
+    res.status(201).json({ message: "Propietario creado exitosamente con vector facial y correo enviado" });
   } catch (err) {
     console.error("Error al guardar propietario:", err);
     res.status(500).json({ body: { error: "Error del servidor" } });
   }
 });
-
-module.exports = router;
 
 const euclideanDistance = (v1, v2) => {
   return Math.sqrt(v1.reduce((sum, val, i) => sum + Math.pow(val - v2[i], 2), 0));
@@ -75,3 +82,5 @@ router.post("/verify-face", async (req, res) => {
     res.status(500).json({ error: "Error del servidor" });
   }
 });
+
+module.exports = router;
