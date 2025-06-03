@@ -11,8 +11,12 @@ import LoadingScreen from "../routes/LoadingScreen";
 export default function NewOwner() {
   const [fullName, setFullName] = useState("");
   const [rut, setRut] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState(""); // 👈 nuevo estado
+  const [email, setEmail] = useState("");
+  const [buildingId, setBuildingId] = useState("");
+  const [department, setDepartment] = useState("");
+  const [buildings, setBuildings] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<string[]>([]);
+
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
@@ -42,6 +46,31 @@ export default function NewOwner() {
     };
     loadModels();
   }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL}/buildings`)
+      .then((res) => res.json())
+      .then((data) => setBuildings(data))
+      .catch((err) => {
+        console.error("Error cargando edificios:", err);
+        toast.error("Error al cargar edificios");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (buildingId) {
+      fetch(`${API_URL}/buildings/${buildingId}/departments`)
+        .then((res) => res.json())
+        .then((data) => setDepartments(data))
+        .catch((err) => {
+          console.error("Error cargando departamentos:", err);
+          toast.error("Error al cargar departamentos");
+        });
+    } else {
+      setDepartments([]);
+      setDepartment("");
+    }
+  }, [buildingId]);
 
   const startCamera = async () => {
     if (videoRef.current) {
@@ -100,7 +129,7 @@ export default function NewOwner() {
       const response = await fetch(`${API_URL}/owners/with-face`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, rut, address, email, descriptor }), // 👈 incluye email
+        body: JSON.stringify({ fullName, rut, email, buildingId, department, faceDescriptor: descriptor }),
       });
 
       if (response.ok) {
@@ -120,20 +149,33 @@ export default function NewOwner() {
 
   return (
     <DefaultLayout>
-      <form onSubmit={handleSubmit}>
-        <h1>Agregar Propietario</h1>
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+        <h1 className="text-2xl font-bold">Agregar Propietario</h1>
 
         <label>Nombre completo</label>
-        <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+        <input className="bg-slate-800 text-white rounded px-3 py-2" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
 
         <label>RUT</label>
-        <input type="text" value={rut} onChange={(e) => setRut(e.target.value)} required />
+        <input className="bg-slate-800 text-white rounded px-3 py-2" type="text" value={rut} onChange={(e) => setRut(e.target.value)} required />
 
-        <label>Domicilio</label>
-        <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
+        <label>Email</label>
+        <input className="bg-slate-800 text-white rounded px-3 py-2" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-        <label>Correo electrónico</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /> {/* 👈 nuevo input */}
+        <label>Edificio</label>
+        <select className="bg-slate-800 text-white rounded px-3 py-2" value={buildingId} onChange={(e) => setBuildingId(e.target.value)} required>
+          <option value="">Selecciona un edificio</option>
+          {buildings.map((b) => (
+            <option key={b._id} value={b._id}>{b.name}</option>
+          ))}
+        </select>
+
+        <label>Departamento</label>
+        <select className="bg-slate-800 text-white rounded px-3 py-2" value={department} onChange={(e) => setDepartment(e.target.value)} required disabled={!departments.length}>
+          <option value="">Selecciona un departamento</option>
+          {departments.map((d) => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </select>
 
         {capturedImage ? (
           <img
@@ -182,7 +224,7 @@ export default function NewOwner() {
           )}
         </div>
 
-        <button type="submit" disabled={loading || !descriptor}>
+        <button type="submit" disabled={loading || !descriptor} className="bg-indigo-600 text-white p-2 rounded mt-2">
           {loading ? "Guardando..." : "Agregar Propietario"}
         </button>
       </form>
@@ -190,5 +232,3 @@ export default function NewOwner() {
     </DefaultLayout>
   );
 }
-
-// ntyg ersq vkgl swwd contraseña de aplicacion
