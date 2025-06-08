@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 const buildingRoutes = require("./routes/buildingRoutes");
+const dynamicQRRoutes = require("./routes/DynamicQR");
 require("dotenv").config();
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/todos", require("./routes/todos"));
 app.use("/api/refresh-token", require("./routes/refreshToken"));
 app.use("/api/signout", require("./routes/signout"));
 app.use("/api/owners", require("./routes/owners"));
+app.use("/api/qr", dynamicQRRoutes);
 app.use("/api/buildings", buildingRoutes);
 
 // Ruta de prueba
