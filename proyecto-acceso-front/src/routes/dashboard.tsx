@@ -15,7 +15,7 @@ function getFormattedTime() {
   return { time, date, weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1) };
 }
 
-export default function DefaultLayout({ children }: DefaultLayoutProps) {
+export default function AuthLayout({ children }: DefaultLayoutProps) {
   const [dateTime, setDateTime] = useState(getFormattedTime());
   const { theme, toggleTheme } = useTheme();
   const auth = useAuth();
@@ -73,16 +73,14 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           className="rounded-b-2xl shadow-lg w-full max-w-4xl h-auto"
         />
 
-{/* Botones para navegar */}
-<div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
-  <Link to="/signup" className="button-home">Agregar Administrador</Link>
-  <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
-  <Link to="/addbuilding" className="button-home">Agregar Edificio</Link>
-  <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
-  <Link to="/verificar" className="button-home">Access Point</Link>
-  <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
-</div>
-
+        {/* Botones para navegar */}
+        <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
+          <Link to="/signup" className="button-home">Agregar Administrador</Link>
+          <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
+          <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
+          <Link to="/verificar" className="button-home">Access Point</Link>
+          <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+        </div>
 
       </div>
 
