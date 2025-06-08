@@ -26,7 +26,7 @@ export default function DynamicQR() {
       }
 
       const data = await res.json();
-      setQr(data.qr); // QR en base64
+      setQr(data.qr); // QR en base64.
     } catch (err) {
       setError(err.message);
     } finally {
