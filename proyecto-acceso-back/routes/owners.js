@@ -2,13 +2,23 @@ const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
 const sendEmail = require("../lib/sendEmail");
+const bcrypt = require("bcryptjs");
 
 // Crear propietario con vector facial
 router.post("/with-face", async (req, res) => {
-  const { fullName, rut, buildingId, department, email, faceDescriptor } = req.body;
+  const { fullName, rut, buildingId, department, email, faceDescriptor, password } = req.body;
 
-  if (!fullName || !rut || !buildingId || !department || !email || !faceDescriptor || faceDescriptor.length !== 128) {
-    return res.status(400).json({ body: { error: "Todos los campos y el vector son obligatorios" } });
+  if (
+    !fullName ||
+    !rut ||
+    !buildingId ||
+    !department ||
+    !email ||
+    !faceDescriptor ||
+    faceDescriptor.length !== 128 ||
+    !password
+  ) {
+    return res.status(400).json({ body: { error: "Todos los campos, el vector y la contraseña son obligatorios" } });
   }
 
   try {
@@ -17,6 +27,10 @@ router.post("/with-face", async (req, res) => {
       return res.status(409).json({ body: { error: "El RUT ya está registrado" } });
     }
 
+    // Hashear la contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newOwner = new Owner({
       fullName,
       rut,
@@ -24,6 +38,7 @@ router.post("/with-face", async (req, res) => {
       faceDescriptor,
       buildingId,
       department,
+      password: hashedPassword, // Guardar solo el hash aquí
     });
 
     await newOwner.save();
@@ -35,7 +50,7 @@ router.post("/with-face", async (req, res) => {
 
     await sendEmail(email, "Confirmación de Registro", htmlContent);
 
-    res.status(201).json({ message: "Propietario creado exitosamente con vector facial y correo enviado" });
+    res.status(201).json({ message: "Propietario creado exitosamente con vector facial, contraseña y correo enviado" });
   } catch (err) {
     console.error("Error al guardar propietario:", err);
     res.status(500).json({ body: { error: "Error del servidor" } });
@@ -70,14 +85,14 @@ router.post("/verify-face", async (req, res) => {
     }
 
     if (minDistance < 0.6) {
-return res.json({
-  success: true,
-  owner: {
-    fullName: bestMatch.fullName,
-    building: bestMatch.buildingId?.name || "Desconocido",
-    department: bestMatch.department,
-  },
-});
+      return res.json({
+        success: true,
+        owner: {
+          fullName: bestMatch.fullName,
+          building: bestMatch.buildingId?.name || "Desconocido",
+          department: bestMatch.department,
+        },
+      });
 
     } else {
       return res.json({ success: false, message: "Acceso denegado: rostro no reconocido" });

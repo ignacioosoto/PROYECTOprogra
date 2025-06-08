@@ -1,4 +1,3 @@
-import DefaultLayout from "../layout/defaultLayout";
 import AuthLayout from "./dashboard";
 
 export default function DynamicQR() {

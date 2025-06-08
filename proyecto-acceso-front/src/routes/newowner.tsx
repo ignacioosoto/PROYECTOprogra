@@ -14,6 +14,7 @@ export default function NewOwner() {
   const [email, setEmail] = useState("");
   const [buildingId, setBuildingId] = useState("");
   const [department, setDepartment] = useState("");
+  const [password, setPassword] = useState(""); // 1. Nuevo estado para la contraseña
   const [buildings, setBuildings] = useState<any[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
 
@@ -129,7 +130,15 @@ export default function NewOwner() {
       const response = await fetch(`${API_URL}/owners/with-face`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, rut, email, buildingId, department, faceDescriptor: descriptor }),
+        body: JSON.stringify({
+          fullName,
+          rut,
+          email,
+          buildingId,
+          department,
+          password, // 2. Incluye la contraseña aquí
+          faceDescriptor: descriptor,
+        }),
       });
 
       if (response.ok) {
@@ -160,6 +169,15 @@ export default function NewOwner() {
 
         <label>Email</label>
         <input className="bg-slate-800 text-white rounded px-3 py-2" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+        <label>Contraseña</label>
+        <input
+          className="bg-slate-800 text-white rounded px-3 py-2"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
         <label>Edificio</label>
         <select className="bg-slate-800 text-white rounded px-3 py-2" value={buildingId} onChange={(e) => setBuildingId(e.target.value)} required>
