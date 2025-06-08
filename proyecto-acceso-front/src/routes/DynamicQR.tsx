@@ -76,3 +76,4 @@ export default function DynamicQR() {
     </AuthLayout>
   );
 }
+

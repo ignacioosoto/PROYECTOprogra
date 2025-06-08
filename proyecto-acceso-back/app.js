@@ -9,6 +9,7 @@ const path = require("path");
 const buildingRoutes = require("./routes/buildingRoutes");
 const loginQRRouter = require("./routes/login-generate-qr");
 
+
 const app = express();
 const port = process.env.PORT || 3500;
 
