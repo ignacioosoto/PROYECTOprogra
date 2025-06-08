@@ -6,7 +6,8 @@ const ownerSchema = new mongoose.Schema({
   email: { type: String, required: true },
   faceDescriptor: { type: [Number], required: false },
   buildingId: { type: mongoose.Schema.Types.ObjectId, ref: "Building", required: true },
-  department: { type: String, required: true }
+  department: { type: String, required: true },
+  password: { type: String, required: true, select: false } // <-- Agrega esta línea
 }, { timestamps: true });
 
 module.exports = mongoose.model("Owner", ownerSchema);

@@ -28,7 +28,7 @@ export default function FaceRecognition() {
       }
     }
   };
-  // para commit
+
   return (
     <DefaultLayout>
       <div className="page">
