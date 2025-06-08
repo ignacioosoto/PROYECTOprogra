@@ -1,5 +1,4 @@
 import { useState } from "react";
-import DefaultLayout from "../layout/defaultLayout";
 import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
