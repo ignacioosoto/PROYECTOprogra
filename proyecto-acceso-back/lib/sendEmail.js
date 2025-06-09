@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -8,15 +9,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmail = async (to, subject, html) => {
+const sendEmail = async (to, subject, html, attachments = []) => {
   const mailOptions = {
     from: `"Control de Acceso" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
+    attachments,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Error detallado en sendEmail:", error);
+    throw error;
+  }
 };
 
 module.exports = sendEmail;

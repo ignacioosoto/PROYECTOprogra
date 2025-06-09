@@ -1,86 +1,75 @@
-import { useState, useRef } from "react";
-import { QRCodeCanvas } from "qrcode.react";
+import { useState } from "react";
 import AuthLayout from "./dashboard";
 
 export default function DynamicQR() {
-  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [qrValue, setQrValue] = useState("");
-  const [error, setError] = useState("");
-  const qrRef = useRef(null);
+  const [qr, setQr] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleGenerateQR = async (e) => {
-    e.preventDefault();
-    setError("");
-    setQrValue("");
+  async function handleGenerateQR() {
+    setLoading(true);
+    setError(null);
+    setQr(null);
 
-    const response = await fetch("http://localhost:3500/api/qr/verify-qr", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:3500/api/qr/login-generate-qr", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await response.json();
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Error al generar QR");
+      }
 
-    if (response.ok) {
-      // Genera el QR con los datos recibidos del backend
-      setQrValue(JSON.stringify(data));
-    } else {
-      setError(data.error || "Error al verificar usuario");
+      const data = await res.json();
+      setQr(data.qr); // QR en base64.
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleDownload = () => {
-    if (!qrRef.current) return;
-    const canvas = qrRef.current.querySelector("canvas");
-    if (!canvas) return;
-    const url = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.download = "codigo-qr.png";
-    link.href = url;
-    link.click();
-  };
+  }
 
   return (
     <AuthLayout>
       <div className="page">
-        <h1>Generador de Código QR Dinámico</h1>
+        <h1>Generador de QR Dinámicos</h1>
+        <p>Genera códigos QR únicos para tus necesidades.</p>
 
-        {/* Formulario de ingreso */}
-        <form onSubmit={handleGenerateQR} className="flex flex-col gap-4 items-center mt-4">
+        <div>
+          <label>Email:</label><br />
           <input
-            type="text"
-            placeholder="Nombre completo"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-            className="input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="usuario@ejemplo.com"
           />
+        </div>
+
+        <div>
+          <label>Contraseña:</label><br />
           <input
             type="password"
-            placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-            className="input"
+            placeholder="********"
           />
-          <button type="submit" className="primary-button">
-            Generar QR
-          </button>
-        </form>
+        </div>
 
-        {error && <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>}
+        <button className="primary-button" onClick={handleGenerateQR} disabled={loading}>
+          {loading ? "Generando..." : "Generar Nuevo QR"}
+        </button>
 
-        {/* QR generado */}
-        {qrValue && (
-          <div className="flex flex-col items-center mt-6">
-            <h2>Código QR generado:</h2>
-            <div ref={qrRef} style={{ margin: "1rem" }}>
-              <QRCodeCanvas value={qrValue} size={256} />
-            </div>
-            <button onClick={handleDownload} className="primary-button">
-              Descargar QR
-            </button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {qr && (
+          <div style={{ marginTop: "20px" }}>
+            <h3>Tu QR Dinámico:</h3>
+            <img src={qr} alt="QR Dinámico" />
           </div>
         )}
       </div>

@@ -77,14 +77,16 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
           <Link to="/signup" className="button-home">Agregar Administrador</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
+          <Link to="/addbuilding" className="button-home">Agregar Edificio</Link>
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
         </div>
 
+
       </div>
 
-      {/* Aquí renderizas los hijos */}
+      {/* Aquí renderizas los hijo */}
       <div className="mt-8">
         {children}
       </div>
