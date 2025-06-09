@@ -77,18 +77,12 @@ export default function AuthLayout({ children }: DefaultLayoutProps) {
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
           <Link to="/signup" className="button-home">Agregar Administrador</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
-<<<<<<< HEAD
           <Link to="/addbuilding" className="button-home">Agregar Edificio</Link>
-=======
->>>>>>> fcd6949c6522205839f41969179546eabc6a78ee
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> fcd6949c6522205839f41969179546eabc6a78ee
 
       </div>
 
