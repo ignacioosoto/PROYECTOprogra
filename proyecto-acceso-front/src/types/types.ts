@@ -1,12 +1,17 @@
 //Mensjajes de solicitudes http
 export interface AuthResponse {
-    body: {
-        user: User;
-        accessToken: string;
-        refreshToken: string;
-    }
-
+  body: {
+    user: {
+      username: string;
+      name: string;
+      id: string;
+    },
+    accessToken: string;
+    refreshToken: string;
+  }
 }
+
+
 
 export interface AuthResponseError {
     body: {

@@ -7,6 +7,8 @@ interface AuthProviderProps {
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  fullName: string | null;
+  isAdmin: boolean;
   getAccessToken: () => string | undefined;
   saveUser: (userData: AuthResponse) => void;
   getRefreshToken: () => string | undefined;
@@ -15,6 +17,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  fullName: null,
+  isAdmin: false,
   getAccessToken: () => undefined,
   saveUser: () => {},
   getRefreshToken: () => undefined,
@@ -25,13 +29,19 @@ export function AuthPorvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<string>("");
+  const [fullName, setFullName] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check if user is already authenticated on mount
     const token = localStorage.getItem("token");
+    const storedFullName = localStorage.getItem("fullName");
+    const storedIsAdmin = localStorage.getItem("isAdmin");
+
     if (token) {
       setIsAuthenticated(true);
       setRefreshToken(token);
+      setFullName(storedFullName);
+      setIsAdmin(storedIsAdmin === "true");
     }
   }, []);
 
@@ -41,32 +51,40 @@ export function AuthPorvider({ children }: AuthProviderProps) {
 
   function getRefreshToken() {
     const token = localStorage.getItem("token");
-    if (token) {
-      return token;
-    }
-    return undefined;
+    return token ? token : undefined;
   }
 
-  // Save user tokens and set authenticated state
   function saveUser(userData: AuthResponse) {
     setAccessToken(userData.body.accessToken);
     setRefreshToken(userData.body.refreshToken);
-    localStorage.setItem("token", userData.body.refreshToken);
     setIsAuthenticated(true);
+    
+    const fullNameFromBackend = userData.body.user.name;
+    setFullName(fullNameFromBackend);
+    localStorage.setItem("fullName", fullNameFromBackend);
+    
+    // Como todos los logueados son admin:
+    setIsAdmin(true);
+    localStorage.setItem("isAdmin", "true");
+
+    localStorage.setItem("token", userData.body.refreshToken);
   }
 
-  // Sign out user
   function signout() {
     setIsAuthenticated(false);
     setAccessToken("");
     setRefreshToken("");
-    localStorage.removeItem("token");
+    setFullName(null);
+    setIsAdmin(false);
+    localStorage.clear();
   }
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        fullName,
+        isAdmin,
         getAccessToken,
         saveUser,
         getRefreshToken,
