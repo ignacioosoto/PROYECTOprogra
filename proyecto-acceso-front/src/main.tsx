@@ -16,6 +16,7 @@ import Dashboard from './routes/dashboard';
 import ProtectedRoute from './routes/protectedRoute';
 import FaceRecognition from './routes/FaceRecognition';
 import DynamicQR from './routes/DynamicQR';
+import QRValidation from './routes/QRValidation';
 import RVisitas from './routes/RVisitas';
 import NewOwner from './routes/newowner';
 import FaceVerification from './routes/FaceVerification';
@@ -48,7 +49,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/verificar",
-    element: <FaceVerification />,
+    element: <QRValidation />,
+  },
+  {
+    path: "/QRValidation",
+    element: <QRValidation />,
   },
   {
     path: "/addbuilding",
@@ -60,7 +65,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Dashboard />,
+        element: <Dashboard children={undefined} />,
       },
     ],
   },
