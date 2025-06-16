@@ -21,6 +21,7 @@ import RVisitas from './routes/RVisitas';
 import NewOwner from './routes/newowner';
 import FaceVerification from './routes/FaceVerification';
 import AddBuilding from './routes/AddBuilding';
+import AccessLog from './routes/AccessLog';  // <-- NUEVA IMPORTACIÓN
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
   {
     path: "/addbuilding",
     element: <AddBuilding />,
+  },
+  {
+    path: "/accesslog",  // <-- NUEVA RUTA
+    element: <AccessLog />,
   },
   {
     path: "/dashboard",

@@ -81,7 +81,7 @@ export default function FaceVerification() {
       const response = await fetch(`${API_URL}/owners/verify-face`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ descriptor }),
+        body: JSON.stringify({ descriptor, accessPoint: "Ingreso Principal" }), // <-- Agregamos el accessPoint
       });
 
       const data = await response.json();

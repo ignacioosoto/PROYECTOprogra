@@ -5,12 +5,10 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
-
 const buildingRoutes = require("./routes/buildingRoutes");
 const loginQRRouter = require("./routes/login-generate-qr");
 const validateQRRouter = require("./routes/validate-QR"); // <-- Importa tu ruta validate-qr
-
-
+const accessLogRoutes = require("./routes/accessLog");
 const app = express();
 const port = process.env.PORT || 3500;
 
@@ -33,7 +31,7 @@ app.use("/api/owners", require("./routes/owners"));
 app.use("/api/qr", loginQRRouter);
 app.use("/api/buildings", buildingRoutes);
 app.use("/api", validateQRRouter); // <-- Aquí agregamos la ruta validate-qr
-
+app.use("/api/accesslog", accessLogRoutes);
 // Ruta base
 app.get("/", (req, res) => res.send("Hola Mundo!"));
 

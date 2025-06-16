@@ -20,7 +20,7 @@ function getFormattedTime() {
   };
 }
 
-export default function DefaultLayout({ children }: DefaultLayoutProps) {
+export default function AuthLayout({ children }: DefaultLayoutProps) {
   const [dateTime, setDateTime] = useState(getFormattedTime());
   const { theme, toggleTheme } = useTheme();
   const auth = useAuth();
@@ -59,10 +59,13 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
         Cerrar sesión
       </button>
 
+
       {/* 📦 Contenedor principal */}
       <div className="flex flex-col items-center w-full">
 
         {/* 🕓 Barra superior con hora y fecha */}
+
+      <div className="flex flex-col items-center w-full">
         <div className="info-bar flex flex-col justify-center p-4 rounded-t-2xl w-full max-w-4xl">
           <div className="flex flex-col items-start date-text">
             <div className="text-2xl font-bold">{dateTime.time}</div>
@@ -71,6 +74,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           </div>
         </div>
 
+
         {/* 🏢 Imagen principal */}
         <img
           src="https://images.unsplash.com/photo-1568605114967-8130f3a36994"
@@ -78,7 +82,9 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           className="rounded-b-2xl shadow-lg w-full max-w-4xl h-auto"
         />
 
+
         {/* 🔘 Menú de navegación */}
+
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
           <Link to="/signup" className="button-home">Agregar Administrador</Link>
           <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
@@ -86,15 +92,22 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+
           <Link to="/QRValidation" className="button-home">Validación QR</Link>
+
+          {/* Nuevo botón agregado */}
+          <Link to="/accesslog" className="button-home">Historial de Accesos</Link>
+
         </div>
 
       </div>
 
       {/* ⬇️ Contenido secundario (hijos) */}
+
       <div className="mt-8">
         {children}
       </div>
     </main>
   );
 }
+// Estilos CSS
