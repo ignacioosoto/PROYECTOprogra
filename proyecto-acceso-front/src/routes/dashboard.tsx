@@ -78,6 +78,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           className="rounded-b-2xl shadow-lg w-full max-w-4xl h-auto"
         />
 
+<<<<<<< HEAD
         {/* 🔘 Menú de navegación */}
         <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
           <Link to="/signup" className="button-home">Agregar Administrador</Link>
@@ -87,6 +88,15 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/verificar" className="button-home">Access Point</Link>
           <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
           <Link to="/QRValidation" className="button-home">Validación QR</Link>
+=======
+        {/* Botones para navegar */}
+        <div className="grid grid-cols-2 gap-4 mt-6 w-full max-w-md px-4">
+          <Link to="/signup" className="button-home">Agregar Administrador</Link>
+          <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
+          <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
+          <Link to="/verificar" className="button-home">Access Point</Link>
+          <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+>>>>>>> 609f93bd504aafb2a8b720e24d4b801b7de46d2b
         </div>
 
       </div>
