@@ -217,9 +217,23 @@ nav ul.open {
   text-align: center;
   padding: 1rem;
   border-radius: 1rem;
-  font-size: 1.2rem;
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  /* Responsive font-size */
   transition: background-color 0.3s, transform 0.3s;
+  word-break: break-word;
+  /* Cortar palabras largas */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  /* Altura mínima consistente */
+  text-wrap: balance;
+  /* Mejor distribución si es compatible */
+  text-align: center;
+  line-height: 1.2;
+  padding-inline: 0.75rem;
 }
+
 
 .button-home:hover {
   background-color: #4c5694;
