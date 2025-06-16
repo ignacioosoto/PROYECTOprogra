@@ -49,7 +49,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/verificar",
-    element: <QRValidation />,
+    element: <FaceVerification />,
   },
   {
     path: "/QRValidation",
