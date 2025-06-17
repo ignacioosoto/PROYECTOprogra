@@ -89,11 +89,10 @@ export default function AuthLayout({ children }: DefaultLayoutProps) {
             <Link to="/signup" className="button-home">Agregar Administrador</Link>
             <Link to="/newowner" className="button-home">Agregar Propietarios</Link>
             <Link to="/addbuilding" className="button-home">Agregar Edificio</Link>
-            <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
             <Link to="/verificar" className="button-home">Access Point</Link>
-            <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
-
+            <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
             <Link to="/QRValidation" className="button-home">Validación QR</Link>
+            <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
 
             {/* Nuevo botón agregado */}
             <Link to="/accesslog" className="button-home">Historial de Accesos</Link>
