@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
-const AccessLog = require("../esquema/AccessLog");  // IMPORTANTE
 const sendEmail = require("../lib/sendEmail");
 const bcrypt = require("bcryptjs");
 
-console.log("✅ owners.js cargado correctamente");
 
-// ✅ GET para el AccessLog (listado de propietarios)
+// ✅ GET para el AccessLog
 router.get("/", async (req, res) => {
   try {
     const owners = await Owner.find();
@@ -23,8 +21,14 @@ router.post("/with-face", async (req, res) => {
   const { fullName, rut, buildingId, department, email, faceDescriptor, password } = req.body;
 
   if (
-    !fullName || !rut || !buildingId || !department || !email ||
-    !faceDescriptor || faceDescriptor.length !== 128 || !password
+    !fullName ||
+    !rut ||
+    !buildingId ||
+    !department ||
+    !email ||
+    !faceDescriptor ||
+    faceDescriptor.length !== 128 ||
+    !password
   ) {
     return res.status(400).json({ body: { error: "Todos los campos, el vector y la contraseña son obligatorios" } });
   }
@@ -39,7 +43,13 @@ router.post("/with-face", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newOwner = new Owner({
-      fullName, rut, email, faceDescriptor, buildingId, department, password: hashedPassword
+      fullName,
+      rut,
+      email,
+      faceDescriptor,
+      buildingId,
+      department,
+      password: hashedPassword,
     });
 
     await newOwner.save();
@@ -58,14 +68,13 @@ router.post("/with-face", async (req, res) => {
   }
 });
 
-// Distancia Euclidiana
+// Verificación facial
 const euclideanDistance = (v1, v2) => {
   return Math.sqrt(v1.reduce((sum, val, i) => sum + Math.pow(val - v2[i], 2), 0));
 };
 
-// Verificación facial + Registro de acceso
 router.post("/verify-face", async (req, res) => {
-  const { descriptor, accessPoint } = req.body;
+  const { descriptor } = req.body;
 
   if (!descriptor || descriptor.length !== 128) {
     return res.status(400).json({ error: "Vector facial inválido" });
@@ -85,24 +94,7 @@ router.post("/verify-face", async (req, res) => {
       }
     }
 
-    console.log("Distancia mínima encontrada:", minDistance);
-
     if (minDistance < 0.6) {
-      console.log("✅ Rostro reconocido:", bestMatch.fullName);
-
-      // REGISTRO EN ACCESSLOG:
-      const newLog = new AccessLog({
-        userId: bestMatch._id,
-        fullName: bestMatch.fullName,
-        building: bestMatch.buildingId?.name || "Desconocido",
-        department: bestMatch.department,
-        accessPoint: accessPoint || "Desconocido",
-        entryTime: new Date()
-      });
-
-      await newLog.save();
-      console.log("✅ Registro guardado correctamente en AccessLog");
-
       return res.json({
         success: true,
         owner: {
@@ -113,7 +105,6 @@ router.post("/verify-face", async (req, res) => {
       });
 
     } else {
-      console.log("❌ Rostro no reconocido, distancia:", minDistance);
       return res.json({ success: false, message: "Acceso denegado: rostro no reconocido" });
     }
   } catch (err) {
