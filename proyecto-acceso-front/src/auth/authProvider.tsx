@@ -28,7 +28,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthPorvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string>("");
-  const [refreshToken, setRefreshToken] = useState<string>("");
+  const [, setRefreshToken] = useState<string>("");
   const [fullName, setFullName] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 

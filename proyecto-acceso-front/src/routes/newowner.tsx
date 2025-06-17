@@ -18,7 +18,6 @@ export default function NewOwner() {
   const [buildings, setBuildings] = useState<any[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
 
-  const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [descriptor, setDescriptor] = useState<number[] | null>(null);
@@ -136,7 +135,7 @@ export default function NewOwner() {
           email,
           buildingId,
           department,
-          password, // 2. Incluye la contraseña aquí
+          password,
           faceDescriptor: descriptor,
         }),
       });

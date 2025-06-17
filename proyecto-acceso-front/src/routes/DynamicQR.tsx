@@ -1,11 +1,12 @@
 import { useState } from "react";
 import DefaultLayout from "../layout/defaultLayout";
+
 export default function DynamicQR() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [qr, setQr] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleGenerateQR() {
     setLoading(true);
@@ -27,7 +28,11 @@ export default function DynamicQR() {
       const data = await res.json();
       setQr(data.qr); // QR en base64.
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Error inesperado al generar QR.");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,4 +80,3 @@ export default function DynamicQR() {
     </DefaultLayout>
   );
 }
-

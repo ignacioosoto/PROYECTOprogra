@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthLayout from "./dashboard";
+// import AuthLayout from "./dashboard"; ← ❌ No se usa, así que la quitamos
 import DefaultLayout from "../layout/defaultLayout";
 
 const API_URL = "http://localhost:3500/api";
@@ -17,7 +17,7 @@ export default function QRValidation() {
                 qrbox: { width: 250, height: 250 },
                 rememberLastUsedCamera: true,
             },
-      /* verbose= */ false
+            /* verbose= */ false
         );
 
         const onScanSuccess = async (decodedText: string) => {
@@ -40,19 +40,23 @@ export default function QRValidation() {
                     toast.error(`❌ Acceso denegado: ${data.error}`);
                 }
             } catch (err) {
-                console.error("Error al validar QR:", err);
+                if (err instanceof Error) {
+                    console.error("Error al validar QR:", err.message);
+                } else {
+                    console.error("Error desconocido al validar QR:", err);
+                }
                 toast.error("Error de conexión con el servidor");
             }
         };
 
-        const onScanFailure = (error: any) => {
+        const onScanFailure = (_error: any) => {
             // Se puede ignorar escaneos fallidos frecuentes
         };
 
         scanner.render(onScanSuccess, onScanFailure);
 
         return () => {
-            scanner.clear().catch((e) => console.error("Error al limpiar escáner", e));
+            scanner.clear().catch((e: any) => console.error("Error al limpiar escáner", e));
         };
     }, []);
 

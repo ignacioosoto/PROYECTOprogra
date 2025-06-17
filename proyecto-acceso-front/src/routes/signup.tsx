@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../auth/authProvider";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../auth/constants";
 import { AuthResponseError } from "../types/types";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,7 +18,6 @@ export default function Signup() {
   const [errorResponse, setErrorResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const auth = useAuth();
   const goTo = useNavigate();
 
   useEffect(() => {
@@ -81,8 +79,6 @@ export default function Signup() {
       setLoading(false);
     }
   }
-
-  //if (auth.isAuthenticated) return <Navigate to="/dashboard" />;
 
   return (
     <AuthLayout>

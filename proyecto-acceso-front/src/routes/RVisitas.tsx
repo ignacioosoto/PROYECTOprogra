@@ -3,7 +3,7 @@ import DefaultLayout from "../layout/defaultLayout";
 import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthLayout from "./dashboard";
+// import AuthLayout from "./dashboard"; ← ❌ No se usa, eliminar
 
 export default function VisitRegister() {
   const [fullName, setFullName] = useState("");
@@ -30,18 +30,18 @@ export default function VisitRegister() {
       });
 
       if (response.ok) {
-        const json = await response.json();
+        // const json = await response.json(); ← ❌ innecesario
         setErrorResponse("");
         toast.success("Visita registrada exitosamente");
 
-        // Download the file from the server
+        // Descargar archivo del servidor
         const fileUrl = `${API_URL}/visits-file`;
         const link = document.createElement("a");
         link.href = fileUrl;
         link.download = "visits.json";
         link.click();
 
-        // Reset form fields
+        // Resetear campos
         setFullName("");
         setCompany("");
         setReason("");
@@ -58,11 +58,13 @@ export default function VisitRegister() {
       setLoading(false);
     }
   }
+
   return (
     <DefaultLayout>
       <form onSubmit={handleSubmit}>
         <h1>Registro de Visitas</h1>
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
+
         <label>Nombre Completo</label>
         <input
           type="text"
@@ -78,6 +80,7 @@ export default function VisitRegister() {
           onChange={(e) => setCompany(e.target.value)}
           required
         />
+
         <label>Motivo de la visita</label>
         <input
           type="text"
@@ -85,6 +88,7 @@ export default function VisitRegister() {
           onChange={(e) => setReason(e.target.value)}
           required
         />
+
         <label>Fecha de la visita</label>
         <input
           type="text"
@@ -97,6 +101,7 @@ export default function VisitRegister() {
           {loading ? "Registrando..." : "Registrar Visita"}
         </button>
       </form>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </DefaultLayout>
   );
