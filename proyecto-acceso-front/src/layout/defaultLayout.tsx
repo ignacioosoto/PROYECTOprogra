@@ -60,7 +60,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
           <Link to="/" className="button-home">Login</Link>
           <Link to="/dynamic-qr" className="button-home">QR Dinámico</Link>
           <Link to="/verificar" className="button-home">Access Point</Link>
-          <Link to="/RVisitas" className="button-home">Registrar Visita</Link>
+          <Link to="/QRValidation" className="button-home">Validacion QR</Link>
         </div>
       </div>
 

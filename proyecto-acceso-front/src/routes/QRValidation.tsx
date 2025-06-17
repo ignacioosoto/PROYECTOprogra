@@ -4,6 +4,7 @@ import { Html5QrcodeScanner } from "html5-qrcode";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthLayout from "./dashboard";
+import DefaultLayout from "../layout/defaultLayout";
 
 const API_URL = "http://localhost:3500/api";
 
@@ -56,10 +57,10 @@ export default function QRValidation() {
     }, []);
 
     return (
-        <AuthLayout>
+        <DefaultLayout>
             <h1>Verificación por Código QR</h1>
             <div id="qr-reader" style={{ width: "100%", maxWidth: "400px", margin: "auto" }} />
             <ToastContainer position="top-right" autoClose={3000} />
-        </AuthLayout>
+        </DefaultLayout>
     );
 }

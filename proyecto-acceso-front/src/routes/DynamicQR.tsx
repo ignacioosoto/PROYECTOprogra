@@ -1,6 +1,5 @@
 import { useState } from "react";
-import AuthLayout from "./dashboard";
-
+import DefaultLayout from "../layout/defaultLayout";
 export default function DynamicQR() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +34,7 @@ export default function DynamicQR() {
   }
 
   return (
-    <AuthLayout>
+    <DefaultLayout>
       <div className="page">
         <h1>Generador de QR Dinámicos</h1>
         <p>Genera códigos QR únicos para tus necesidades.</p>
@@ -73,7 +72,7 @@ export default function DynamicQR() {
           </div>
         )}
       </div>
-    </AuthLayout>
+    </DefaultLayout>
   );
 }
 

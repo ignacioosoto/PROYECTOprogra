@@ -59,7 +59,7 @@ export default function VisitRegister() {
     }
   }
   return (
-    <AuthLayout>
+    <DefaultLayout>
       <form onSubmit={handleSubmit}>
         <h1>Registro de Visitas</h1>
         {!!errorResponse && <div className="errorMessage">{errorResponse}</div>}
@@ -98,6 +98,6 @@ export default function VisitRegister() {
         </button>
       </form>
       <ToastContainer position="top-right" autoClose={3000} />
-    </AuthLayout>
+    </DefaultLayout>
   );
 }
