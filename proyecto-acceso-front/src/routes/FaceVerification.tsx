@@ -4,6 +4,7 @@ import DefaultLayout from "../layout/defaultLayout";
 import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthLayout from "./dashboard";
 
 export default function FaceVerification() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
@@ -102,7 +103,7 @@ export default function FaceVerification() {
   };
 
   return (
-    <DefaultLayout>
+    <AuthLayout>
       <h1>Verificación de Identidad Facial</h1>
 
       <video
@@ -137,6 +138,6 @@ export default function FaceVerification() {
       )}
 
       <ToastContainer position="top-right" autoClose={3000} />
-    </DefaultLayout>
+    </AuthLayout>
   );
 }
