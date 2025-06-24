@@ -1,10 +1,12 @@
 import { useState } from "react";
 import DefaultLayout from "../layout/defaultLayout";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function DynamicQR() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [qr, setQr] = useState(null);
+  const [qr, setQr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,7 +16,7 @@ export default function DynamicQR() {
     setQr(null);
 
     try {
-      const res = await fetch("http://localhost:3500/api/qr/login-generate-qr", {
+      const res = await fetch(`${API_URL}/api/qr/login-generate-qr`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -26,7 +28,7 @@ export default function DynamicQR() {
       }
 
       const data = await res.json();
-      setQr(data.qr); // QR en base64.
+      setQr(data.qr); // Asumimos base64
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -42,11 +44,14 @@ export default function DynamicQR() {
     <DefaultLayout>
       <div className="page">
         <h1>Generador de QR Dinámicos</h1>
-        <p>Genera códigos QR únicos para tus necesidades.</p>
+        <p className="text-lg text-blue-600 font-bold mb-4">
+          Genera códigos QR únicos para tus necesidades.
+        </p>
 
-        <div>
+        <div className="mb-3">
           <label>Email:</label><br />
           <input
+            className="input"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -54,9 +59,10 @@ export default function DynamicQR() {
           />
         </div>
 
-        <div>
+        <div className="mb-3">
           <label>Contraseña:</label><br />
           <input
+            className="input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -64,16 +70,20 @@ export default function DynamicQR() {
           />
         </div>
 
-        <button className="primary-button" onClick={handleGenerateQR} disabled={loading}>
+        <button
+          className="primary-button"
+          onClick={handleGenerateQR}
+          disabled={loading}
+        >
           {loading ? "Generando..." : "Generar Nuevo QR"}
         </button>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="text-red-500 mt-3">{error}</p>}
 
         {qr && (
-          <div style={{ marginTop: "20px" }}>
-            <h3>Tu QR Dinámico:</h3>
-            <img src={qr} alt="QR Dinámico" />
+          <div className="mt-6 text-center">
+            <h3 className="text-lg font-semibold">Tu QR Dinámico:</h3>
+            <img src={qr} alt="QR Dinámico" className="mx-auto mt-2" />
           </div>
         )}
       </div>

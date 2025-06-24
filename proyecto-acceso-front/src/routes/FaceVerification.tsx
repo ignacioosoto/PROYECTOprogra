@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import DefaultLayout from "../layout/defaultLayout";
-import { API_URL } from "../auth/constants";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function FaceVerification() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
@@ -81,7 +82,7 @@ export default function FaceVerification() {
       const response = await fetch(`${API_URL}/owners/verify-face`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ descriptor, accessPoint: "Ingreso Principal" }), // <-- Agregamos el accessPoint
+        body: JSON.stringify({ descriptor, accessPoint: "Ingreso Principal" }),
       });
 
       const data = await response.json();
@@ -138,5 +139,5 @@ export default function FaceVerification() {
 
       <ToastContainer position="top-right" autoClose={3000} />
     </DefaultLayout>
-  );  
+  );
 }

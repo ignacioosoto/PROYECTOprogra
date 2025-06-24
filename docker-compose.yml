@@ -5,10 +5,9 @@ services:
     build: ./proyecto-acceso-back
     container_name: backend-app
     ports:
-      - "3500:3500"
-    # ❌ Quitamos el volume para evitar sobrescribir /app
-    # volumes:
-    #   - ./proyecto-acceso-back:/app
+      - "3000:3000"  # Usa el puerto real del backend
+    env_file:  
+      - ./proyecto-acceso-back/.env
     environment:
       - NODE_ENV=development
     restart: always
@@ -18,7 +17,6 @@ services:
     container_name: frontend-app
     ports:
       - "3000:80"
-    # ✅ Aquí sí puedes usar volumes si quieres ver cambios en vivo
     volumes:
       - ./proyecto-acceso-front:/app
     restart: always

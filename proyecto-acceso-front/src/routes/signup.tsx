@@ -125,4 +125,4 @@ export default function Signup() {
     </AuthLayout>
   );
 }
-// This file is part of the proyecto-acceso-front project.
+// This file is part of the proyecto-acceso-front project.   

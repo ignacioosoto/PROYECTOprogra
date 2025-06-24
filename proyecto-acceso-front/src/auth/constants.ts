@@ -1,1 +1,1 @@
-export const API_URL = "http://localhost:3500/api";
+export const API_URL = "https://proyectoaccesobackend-h0cgh0a9hba3bph4.chilecentral-01.azurewebsites.net";

@@ -20,18 +20,23 @@ export default function AddBuilding() {
       i.toString().padStart(3, "0")
     );
 
-    const response = await fetch(`${API_URL}/buildings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, departments }),
-    });
+    try {
+      const response = await fetch(`${API_URL}/buildings`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, departments }),
+      });
 
-    if (response.ok) {
-      toast.success("Edificio agregado correctamente");
-      setName("");
-      setNumDepartments("");
-    } else {
-      toast.error("Error al guardar el edificio");
+      if (response.ok) {
+        toast.success("Edificio agregado correctamente");
+        setName("");
+        setNumDepartments("");
+      } else {
+        const err = await response.json();
+        toast.error(err?.error || "Error al guardar el edificio");
+      }
+    } catch (error) {
+      toast.error("No se pudo conectar con el servidor");
     }
   };
 

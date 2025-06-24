@@ -73,3 +73,7 @@ router.post("/login-generate-qr", async (req, res) => {
 });
 
 module.exports = router;
+console.log("✅ login-generate-qr.js cargado");
+router.get("/ping", (req, res) => {
+  res.send("pong desde qr route");
+});

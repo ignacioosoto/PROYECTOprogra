@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../auth/authProvider";
 import { Navigate, useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface LogEntry {
   _id: string;
   fullName: string;
@@ -23,11 +25,11 @@ export default function AccessLog() {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    fetch("/api/accesslog")
+    fetch(`${API_URL}/api/accesslog`)
       .then(res => res.json())
       .then((data: LogEntry[]) => {
         setLogs(data);
-        const uniqueBuildings: string[] = [...new Set(data.map((log) => log.building))];
+        const uniqueBuildings = [...new Set(data.map(log => log.building))];
         setBuildings(uniqueBuildings);
       });
   }, []);
@@ -38,7 +40,7 @@ export default function AccessLog() {
     if (endDate) params.append("endDate", endDate);
     if (selectedBuilding) params.append("building", selectedBuilding);
 
-    fetch(`/api/accesslog?${params.toString()}`)
+    fetch(`${API_URL}/api/accesslog?${params.toString()}`)
       .then(res => res.json())
       .then((data: LogEntry[]) => setLogs(data));
   };
