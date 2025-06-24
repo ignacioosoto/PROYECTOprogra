@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Owner = require("../esquema/owner");
+const AccessLog = require("../esquema/AccessLog");
 const sendEmail = require("../lib/sendEmail");
 const bcrypt = require("bcryptjs");
-
 
 // ✅ GET para el AccessLog
 router.get("/", async (req, res) => {
@@ -58,7 +58,6 @@ router.post("/with-face", async (req, res) => {
       <h1>Bienvenido a su departamento, ${fullName}</h1>
       <p>Su registro se ha realizado correctamente. Puede comenzar a utilizar el sistema de acceso.</p>
     `;
-
     await sendEmail(email, "Confirmación de Registro", htmlContent);
 
     res.status(201).json({ message: "Propietario creado exitosamente con vector facial, contraseña y correo enviado" });
@@ -95,6 +94,15 @@ router.post("/verify-face", async (req, res) => {
     }
 
     if (minDistance < 0.6) {
+      // Registrar acceso si hay coincidencia válida
+      await new AccessLog({
+        userId: bestMatch._id,
+        fullName: bestMatch.fullName,
+        building: bestMatch.buildingId?.name || "Desconocido",
+        department: bestMatch.department,
+        accessPoint: "Ingreso por Reconocimiento Facial",
+      }).save();
+
       return res.json({
         success: true,
         owner: {
